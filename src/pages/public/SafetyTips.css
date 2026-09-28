@@ -1,0 +1,203 @@
+/* ==============================
+   SAFETY TIPS PAGE
+================================= */
+
+.safety-page {
+  width: 100%;
+  min-height: 100vh;
+  padding: 60px 20px;
+  background-color: #c4cbd2;
+}
+
+
+/* ==============================
+   SAFETY HERO
+================================= */
+
+.safety-hero {
+  max-width: 700px;
+  margin: 0 auto ;
+  text-align: center;
+  padding: 24px 20px 0;
+  box-sizing:border-box ;
+}
+.safety-icon {
+  display: block;
+  font-size: 30px;
+  margin-bottom: 15px;
+}
+
+.safety-hero h1 {
+  margin: 0 0 15px;
+  font-size: 42px;
+  font-weight: 700;
+}
+
+.safety-hero p {
+  margin: 0;
+  font-size: 20px;
+  line-height: 1.7;
+  font-weight: 400;
+  padding: 0 16px;
+  max-width: 550px;
+  margin:0 auto;
+}
+
+
+/* ==============================
+   SAFETY TIPS
+================================= */
+
+.safety-tips {
+  max-width: 1000px;
+  margin: 0 auto;
+
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 25px;
+  margin-bottom: 6px;
+}
+
+
+/* ==============================
+   SAFETY CARD
+================================= */
+
+.safety-card {
+  padding: 18px;
+  background-color: #f4eded;
+
+  border: 1px solid #b8bbc0;
+  border-radius: 11px;
+
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+  margin: 8px;
+  margin-right: 8px;
+  align-items: flex-start;
+  flex-direction: column;
+}
+
+.tip-icon {
+  display: block;
+  font-size: 30px;
+  margin-bottom: 15px;
+}
+
+.safety-card h2 {
+  margin: 0 0 12px;
+  font-size: 22px;
+}
+
+.safety-card p {
+  margin: 0;
+  font-size: 18px;
+  line-height: 1.7;
+  font-weight: 350;
+}
+
+
+/* ==============================
+   REPORT SECTION
+================================= */
+
+.report-section {
+  max-width: 800px;
+  margin: 50px auto 0;
+  padding: 35px;
+
+  text-align: center;
+
+  background-color: #f4eded;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+}
+
+.report-icon {
+  display: block;
+  font-size: 30px;
+  margin-bottom: 12px;
+}
+
+.report-section h2 {
+  margin: 0 0 12px;
+  font-size: 26px;
+}
+
+.report-section p {
+  max-width: 600px;
+  margin: 0 auto 25px;
+  line-height: 1.6;
+  font-size: 18px;
+  font-weight: 400;
+}
+
+.report-section button {
+  padding: 12px 24px;
+  background: rgb(23, 23, 56);
+  color: #f4eded;
+
+  border: none;
+  border-radius: 8px;
+
+  font-size: 16px;
+  font-weight: 500;
+
+  cursor: pointer;
+}
+.report-section button :hover {
+    color:red;
+}
+
+
+/* ==============================
+   BUTTON HOVER
+================================= */
+
+.report-section button:hover {
+  opacity: 0.85;
+}
+
+
+/* ==============================
+   MOBILE RESPONSIVENESS
+================================= */
+
+@media (max-width: 768px) {
+
+  .safety-page {
+    padding: 40px 16px;
+  }
+
+  .safety-hero {
+    margin-bottom: 35px;
+  }
+
+  .safety-hero h1 {
+    font-size: 32px;
+  }
+
+  .safety-hero p {
+    font-size: 16px;
+  }
+
+  .safety-tips {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+
+  .safety-card {
+    padding: 24px;
+  }
+
+  .safety-card h2 {
+    font-size: 20px;
+  }
+
+  .report-section {
+    padding: 28px 20px;
+  }
+
+  .report-section h2 {
+    font-size: 22px;
+  }
+}
