@@ -17,7 +17,7 @@ export default function Home() {
 
             <p>
               Discover quality properties, trusted agents, and a simpler way
-              to rent.
+              to rent and purchase property.
             </p>
 
             <div className="search-bar">

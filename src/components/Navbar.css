@@ -7,7 +7,7 @@
     position: relative;
     background: #f2efef;
     border-radius: 8px;
-    box-shadow:0 1px 3px rgb(36, 30, 30);
+    box-shadow:3px;
     border-bottom: 1px solid #e5e7eb;
 }
 .logo img {
@@ -30,7 +30,7 @@
     text-decoration: none;
     color: black;
     font-size: 17px;
-    font-weight: 300;
+    font-weight: 750;
 }
 .navbar-links svg {
     width: 20px !important;
@@ -84,23 +84,6 @@
     background: white;
     padding: 20px 24px;
     gap: 12px;
-}
-.mobile-signin {
-    background: white;
-    color:black;
-    padding: 8px 6px;
-    margin: 10px 8px;
-    border-radius: 6px;
-    border: bold;
-    margin-bottom: 3px;
-}
-.mobile-signup {
-    background:blue;
-    color:white;
-    padding: 8px 6px;
-    margin: 10px 8px;
-    border-radius: 6px;
-    margin-top: 3px;
 }
 .mobile-menu li {
   list-style: none;

@@ -1,4 +1,5 @@
 import "./Footer.css";
+import { Link } from "react-router-dom";
 export default function Footer() {
   return (
     <section className="footer">
@@ -7,7 +8,7 @@ export default function Footer() {
         <div className="footer-brand">
           <h2>RentBridge</h2>
           <p>
-            Find trusted rental properties and connect directly
+            Find trusted properties for sale and rents
             with verified agents.
           </p>
         </div>
@@ -16,23 +17,19 @@ export default function Footer() {
 
           <div className="footer-column">
             <h3>Explore</h3>
-            <a href="./properties">Properties</a>
-            <a href="./rentals">Rentals</a>
-            <a href="./locations">Locations</a>
+            <Link to="/properties">Properties</Link>
+            <Link to="./safetytips">SafetyTips</Link>
           </div>
 
           <div className="footer-column">
             <h3>For Agents</h3>
-            <a href="./agents-login">Agent Login</a>
-            <a href="./add-listing">Add Listing</a>
-            <a href="./agents-dashboard">Dashboard</a>
+            <Link to="./agents-login">Agent Login</Link>
           </div>
 
           <div className="footer-column">
             <h3>Company</h3>
             <a href="./about">About Us</a>
-            <a href="./contacts">Contact</a>
-            <a href="./faqs">FAQs</a>
+            <a href="./contacts">Contact Us</a>
           </div>
 
         </div>

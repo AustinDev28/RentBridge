@@ -1,14 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import "./FeaturedProperties.css";
-/* ============================================================
-   YOUR IMAGES
-   1. Create the folder: src/assets/properties/
-   2. Drop your photos in there (name them however you like)
-   3. Update the file names below to match your real files
-   4. Add or remove lines/entries as needed — each listing can
-      have as many images as you want, just add more imports
-      and add them to that listing's images array further down.
-   ============================================================ */
 
 // --- Modern 2 Bedroom Apartment (Lekki Phase 1) ---
 import lekki1 from "../assets/properties/lekki-1.jpg";
@@ -31,7 +22,7 @@ import chevron1 from "../assets/properties/chevron-1.jpg";
 import chevron2 from "../assets/properties/chevron-2.jpg";
 import chevron3 from "../assets/properties/chevron-3.jpg";
 
-// --- 1 bedroom Apartment (Yaba) ---
+// --- Cozy Studio Apartment (Yaba) ---
 import yaba1 from "../assets/properties/yaba-1.jpg";
 import yaba2 from "../assets/properties/yaba-2.jpg";
 import yaba3 from "../assets/properties/yaba-3.jpg";
@@ -42,9 +33,10 @@ import banana2 from "../assets/properties/banana-2.jpg";
 import banana3 from "../assets/properties/banana-3.jpg";
 import banana4 from "../assets/properties/banana-4.jpg";
 
-const PROPERTIES = [
+export const PROPERTIES = [
   {
     id: 1,
+    listingType: "rent", // "rent" or "sale"
     title: "Modern 2 Bedroom Apartment",
     location: "Lekki Phase 1, Lagos",
     price: 2500000,
@@ -58,9 +50,10 @@ const PROPERTIES = [
   },
   {
     id: 2,
+    listingType: "sale",
     title: "Luxury 3 Bedroom Duplex",
     location: "Ikoyi, Lagos",
-    price: 4500000,
+    price: 185000000,
     beds: 3,
     baths: 3,
     sqft: 3000,
@@ -71,6 +64,7 @@ const PROPERTIES = [
   },
   {
     id: 3,
+    listingType: "rent",
     title: "Spacious 1 Bedroom Apartment",
     location: "Victoria Island, Lagos",
     price: 1800000,
@@ -84,9 +78,10 @@ const PROPERTIES = [
   },
   {
     id: 4,
-    title: "3 Bedroom Terrace Duplex",
+    listingType: "sale",
+    title: "4 Bedroom Terrace Duplex",
     location: "Chevron, Lekki, Lagos",
-    price: 7000000,
+    price: 120000000,
     beds: 4,
     baths: 4,
     sqft: 3500,
@@ -97,22 +92,24 @@ const PROPERTIES = [
   },
   {
     id: 5,
-    title: "1 bedroom Apartment",
+    listingType: "rent",
+    title: "Cozy Studio Apartment",
     location: "Yaba, Lagos",
-    price: 1600000,
+    price: 1200000,
     beds: 1,
-    baths: 2,
+    baths: 1,
     sqft: 500,
     description:
-      "Efficient layout close to tech hubs and transport links, perfect for young prospect.",
+      "Efficient studio layout close to tech hubs and transport links, perfect for young professionals and students.",
     amenities: ["Wi-Fi Ready", "Prepaid Meter", "Parking"],
     images: [yaba1, yaba2, yaba3],
   },
   {
     id: 6,
+    listingType: "sale",
     title: "5 Bedroom Detached Duplex",
     location: "Banana Island, Lagos",
-    price: 15000000,
+    price: 650000000,
     beds: 5,
     baths: 6,
     sqft: 5200,
@@ -123,9 +120,10 @@ const PROPERTIES = [
   },
 ];
 
-export { PROPERTIES };
-
 const naira = (n) => "₦" + n.toLocaleString("en-NG");
+
+const LISTING_LABEL = { rent: "For Rent", sale: "For Sale" };
+const priceSuffix = (listingType) => (listingType === "rent" ? "/ year" : "one-time");
 
 /* ---------- Icons ---------- */
 const Icon = ({ children, size = 16 }) => (
@@ -167,7 +165,7 @@ const Close = () => (
 );
 
 /* ---------- Image slider (used in cards and modal) ---------- */
-function Slider({ images, alt, large = false, badge, children }) {
+function Slider({ images, alt, large = false, badge, badgeType, children }) {
   const [index, setIndex] = useState(0);
   const touchStart = useRef(null);
   const count = images.length;
@@ -217,7 +215,11 @@ function Slider({ images, alt, large = false, badge, children }) {
         </div>
       </div>
 
-      {badge && <span className="badge">{badge}</span>}
+      {badge && (
+        <span className={`badge ${badgeType === "sale" ? "badge--sale" : ""}`}>
+          {badge}
+        </span>
+      )}
       {children}
 
       {count > 1 && (
@@ -255,7 +257,7 @@ function Slider({ images, alt, large = false, badge, children }) {
 
 /* ---------- Property card ---------- */
 function PropertyCard({ property, liked, onToggleLike, onOpen }) {
-  const { title, location, price, beds, baths, sqft, images } = property;
+  const { title, location, price, beds, baths, sqft, images, listingType } = property;
 
   return (
     <article
@@ -271,7 +273,7 @@ function PropertyCard({ property, liked, onToggleLike, onOpen }) {
         }
       }}
     >
-      <Slider images={images} alt={title} badge="For Rent">
+      <Slider images={images} alt={title} badge={LISTING_LABEL[listingType]} badgeType={listingType}>
         <button
           className={`card__like ${liked ? "is-liked" : ""}`}
           aria-label={liked ? "Remove from saved" : "Save property"}
@@ -289,7 +291,7 @@ function PropertyCard({ property, liked, onToggleLike, onOpen }) {
         <h3 className="card__title">{title}</h3>
         <p className="card__location">{location}</p>
         <p className="card__price">
-          {naira(price)} <span>/ year</span>
+          {naira(price)} <span>{priceSuffix(listingType)}</span>
         </p>
         <ul className="card__meta">
           <li><Bed /> {beds}</li>
@@ -303,7 +305,7 @@ function PropertyCard({ property, liked, onToggleLike, onOpen }) {
 
 /* ---------- Listing details modal ---------- */
 function ListingModal({ property, liked, onToggleLike, onClose }) {
-  const { title, location, price, beds, baths, sqft, description, amenities, images } = property;
+  const { title, location, price, beds, baths, sqft, description, amenities, images, listingType } = property;
 
   useEffect(() => {
     const onKey = (e) => e.key === "Escape" && onClose();
@@ -323,7 +325,7 @@ function ListingModal({ property, liked, onToggleLike, onClose }) {
           <Close />
         </button>
 
-        <Slider images={images} alt={title} large badge="For Rent" />
+        <Slider images={images} alt={title} large badge={LISTING_LABEL[listingType]} badgeType={listingType} />
 
         <div className="modal__content">
           <div className="modal__head">
@@ -332,7 +334,7 @@ function ListingModal({ property, liked, onToggleLike, onClose }) {
               <p className="card__location">{location}</p>
             </div>
             <p className="modal__price">
-              {naira(price)} <span>/ year</span>
+              {naira(price)} <span>{priceSuffix(listingType)}</span>
             </p>
           </div>
 
@@ -351,8 +353,17 @@ function ListingModal({ property, liked, onToggleLike, onClose }) {
           </ul>
 
           <div className="modal__actions">
-            <button className="btn btn--primary" onClick={() => alert("Hook this up to your booking / contact flow")}>
-              Contact agent
+            <button
+              className="btn btn--primary"
+              onClick={() =>
+                alert(
+                  listingType === "rent"
+                    ? "Hook this up to your 'request to rent' flow"
+                    : "Hook this up to your 'make an offer / buy' flow"
+                )
+              }
+            >
+              {listingType === "rent" ? "Rent this property" : "Buy this property"}
             </button>
             <button className="btn btn--ghost" onClick={() => onToggleLike(property.id)}>
               <Heart filled={liked} /> {liked ? "Saved" : "Save"}
@@ -364,10 +375,17 @@ function ListingModal({ property, liked, onToggleLike, onClose }) {
   );
 }
 
+const FILTERS = [
+  { key: "all", label: "All" },
+  { key: "rent", label: "For Rent" },
+  { key: "sale", label: "For Sale" },
+];
+
 /* ---------- Section ---------- */
 export default function FeaturedProperties({ properties = PROPERTIES }) {
   const [selected, setSelected] = useState(null);
   const [liked, setLiked] = useState(() => new Set());
+  const [filter, setFilter] = useState("all");
 
   const toggleLike = useCallback((id) => {
     setLiked((prev) => {
@@ -379,14 +397,39 @@ export default function FeaturedProperties({ properties = PROPERTIES }) {
 
   const close = useCallback(() => setSelected(null), []);
 
+  const visible =
+    filter === "all" ? properties : properties.filter((p) => p.listingType === filter);
+
   return (
     <section className="featured" id="properties">
       <div className="featured__inner">
-        {properties.length === 0 ? (
-          <p className="featured__empty">No properties match your filters. Try clearing a few and searching again.</p>
+        <header className="featured__header">
+          <div>
+            <h2>Featured Properties</h2>
+            <p>Handpicked properties for you</p>
+          </div>
+          <a href="#properties" className="featured__viewall">View all</a>
+        </header>
+
+        <div className="featured__filters" role="tablist" aria-label="Filter properties by listing type">
+          {FILTERS.map((f) => (
+            <button
+              key={f.key}
+              role="tab"
+              aria-selected={filter === f.key}
+              className={`filter-btn ${filter === f.key ? "is-active" : ""}`}
+              onClick={() => setFilter(f.key)}
+            >
+              {f.label}
+            </button>
+          ))}
+        </div>
+
+        {visible.length === 0 ? (
+          <p className="featured__empty">No properties match this filter yet.</p>
         ) : (
           <div className="featured__grid">
-            {properties.map((p) => (
+            {visible.map((p) => (
               <PropertyCard
                 key={p.id}
                 property={p}

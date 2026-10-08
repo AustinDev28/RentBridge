@@ -29,10 +29,6 @@ export default function Navbar() {
               <ShieldCheck size="{16}" /> Safety-Tips
                </a>
              </div>
-        <div className="navbar-button">
-        <button className="navbar-button-1">Sign in</button>
-        <button className="navbar-button-2">Sign up</button>
-        </div>
          {/* Hamburger button - mobile only */}
       <button
         className="hamburger"
@@ -52,8 +48,6 @@ export default function Navbar() {
           <li><Link to="/agents" onClick={() => setIsOpen(false)}>Agents</Link></li>
           <li><Link to="/about" onClick={() => setIsOpen(false)}>About</Link></li>
           <li><Link to="/safetytips" onClick={() => setIsOpen(false)}>Safety-Tips</Link></li>
-          <li><button className="mobile-signin">Sign in</button></li>
-          <li><button className="mobile-signup">Sign up</button></li>
         </ul>
       )}
         </section>

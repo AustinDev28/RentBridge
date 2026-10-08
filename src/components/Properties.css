@@ -48,7 +48,7 @@
 /* ---------- Intro + search ---------- */
 .rb-container { max-width: 1280px; margin: 0 auto; padding: 32px 40px 60px; }
 .rb-title { font-size: 2rem; font-weight: 700; margin-bottom: 6px; }
-.rb-subtitle { color: var(--muted); margin-bottom: 24px; }
+.rb-subtitle { color: var(--muted); margin-bottom: 24px; font-size:large;font-weight:530 }
 
 .rb-search-bar {
   background: #fff;
@@ -146,7 +146,6 @@
 .rb-chevron { transition: transform 0.2s ease; }
 .rb-filter-toggle.is-open .rb-chevron { transform: rotate(180deg); }
 
-/* Collapsed: hide the panel and let the listings take the full width */
 .rb-filters--hidden { display: none; }
 .rb-content-grid--collapsed { grid-template-columns: minmax(0, 1fr); }
 

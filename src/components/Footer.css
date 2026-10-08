@@ -3,6 +3,7 @@
   padding: 45px 15px 20px;
   background: #f8fafc;
   border-top: 1px solid #e5e7eb;
+  box-shadow: 4px;
 }
 
 .footer-container {
@@ -76,10 +77,12 @@
 
 .footer-bottom p {
   margin: 0;
-  color: #3e4f66;
+  color: black;
   font-size: large;
-  font-weight: 300;
-
+  font-weight: 700;
+}
+.footer-bottom p:hover {
+  color:goldenrod;
 }
 
 .footer-legal {
@@ -89,7 +92,7 @@
 }
 
 .footer-legal a {
-  color: #64748b;
+  color: #4c5e78;
   text-decoration: none;
 }
 

@@ -36,9 +36,8 @@ export default function Properties() {
     setSelectedAmenities([]);
   };
 
-  // Filter + sort the shared PROPERTIES data based on the sidebar controls.
-  // Property "type" isn't its own field on the data yet, so we match it
-  // loosely against the title (e.g. "Duplex" matches "Luxury 3 Bedroom Duplex").
+  // Filter ---------Section--------//
+
   const filteredProperties = useMemo(() => {
     let result = PROPERTIES.filter((p) => {
       const matchesType =
@@ -74,7 +73,7 @@ export default function Properties() {
           <div className="rb-field">
             <label>Location</label>
             <select>
-              <option>Agege</option>
+              <option>Ikeja</option>
               <option>Ajeromi-Ifelodun</option>
               <option>Alimosho</option>
               <option>Amuwo-Odofin</option>
@@ -84,7 +83,7 @@ export default function Properties() {
               <option>Eti-Osa (Lekki / Ikoyi / VI)</option>
               <option>Ibeju-Lekki</option>
               <option>Ifako-Ijaiye</option>
-              <option>Ikeja</option>
+              <option>Agege</option>
               <option>Ikorodu</option>
               <option>Kosofe</option>
               <option>Lagos Island</option>
