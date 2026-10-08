@@ -1,9 +1,19 @@
 import "./Home.css";
 import heroImg from "../../assets/hero-house.jpg";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import FeaturedProperties from "../../components/FeaturedProperties.jsx";
+import { useState } from "react";
 
 export default function Home() {
+  const [search, setSearch] =useState("")
+  const [type, setType] = useState ("All");
+
+  const navigate = useNavigate();
+  const handleSearch = () => {
+    navigate(
+      '/properties?locations=${encodeURLComponent (search)}&types=${types}'
+    )
+  }
   return (
     <>
       {/* HERO */}
@@ -20,38 +30,14 @@ export default function Home() {
               to rent and purchase property.
             </p>
 
-            <div className="search-bar">
-              <div className="search-field">
-                <label>Location</label>
-                <input
-                  type="text"
-                  placeholder="What location do you want?"
-                />
-              </div>
+            <div className="hero-buttons">
+              <Link to="/properties" className="hero-btn primary">
+                 Explore Properties
+              </Link>
 
-              <div className="search-field">
-                <label>Property Type</label>
-                <select>
-                  <option>Apartment</option>
-                  <option>1 Bedroom</option>
-                  <option>2 Bedroom Flat</option>
-                  <option>3 Bedroom Flat</option>
-                  <option>Self Contain</option>
-                  <option>Duplex</option>
-                </select>
-              </div>
-
-              <div className="search-field">
-                <label>Min Price</label>
-                <input type="number" placeholder="₦0" />
-              </div>
-
-              <div className="search-field">
-                <label>Max Price</label>
-                <input type="number" placeholder="Any" />
-              </div>
-
-              <button className="search-btn">Search</button>
+              <Link to="/safetytips" className="hero-btn secondary">
+                Safety Tips
+              </Link>
             </div>
           </div>
         </div>
