@@ -26,7 +26,7 @@ export default function Home() {
             <h1>Discover Your Perfect Home</h1>
 
             <p>
-              Discover quality properties, trusted agents, and a simpler way
+              Suitable and verified properties, trusted agents, and a simpler way
               to rent and purchase property.
             </p>
 

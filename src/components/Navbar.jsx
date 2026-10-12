@@ -19,9 +19,6 @@ export default function Navbar() {
                <a href="./properties">
               <Building2 size="{12}" /> Properties
                </a>
-               <a href="./agents">
-              <Users size="{12px}" /> Agents
-               </a>
                <a href="./about">
               <Info size="{12}" /> About
                </a>
@@ -45,7 +42,6 @@ export default function Navbar() {
         <ul className="mobile-menu">
           <li><Link to="/" onClick={() => setIsOpen(false)}>Home</Link></li>
           <li><Link to="/properties" onClick={() => setIsOpen(false)}>Properties</Link></li>
-          <li><Link to="/agents" onClick={() => setIsOpen(false)}>Agents</Link></li>
           <li><Link to="/about" onClick={() => setIsOpen(false)}>About</Link></li>
           <li><Link to="/safetytips" onClick={() => setIsOpen(false)}>Safety-Tips</Link></li>
         </ul>

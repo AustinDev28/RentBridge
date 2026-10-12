@@ -1,6 +1,8 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import "./FeaturedProperties.css";
 
+/* Property Images section*/
+
 // --- Modern 2 Bedroom Apartment (Lekki Phase 1) ---
 import lekki1 from "../assets/properties/lekki-1.jpg";
 import lekki2 from "../assets/properties/lekki-2.jpg";
@@ -36,6 +38,8 @@ import banana4 from "../assets/properties/banana-4.jpg";
 export const PROPERTIES = [
   {
     id: 1,
+    listingId: "RB-10231",
+    verified: true,
     listingType: "rent", // "rent" or "sale"
     title: "Modern 2 Bedroom Apartment",
     location: "Lekki Phase 1, Lagos",
@@ -50,6 +54,8 @@ export const PROPERTIES = [
   },
   {
     id: 2,
+    listingId: "RB-10247",
+    verified: true,
     listingType: "sale",
     title: "Luxury 3 Bedroom Duplex",
     location: "Ikoyi, Lagos",
@@ -64,6 +70,8 @@ export const PROPERTIES = [
   },
   {
     id: 3,
+    listingId: "RB-10259",
+    verified: false,
     listingType: "rent",
     title: "Spacious 1 Bedroom Apartment",
     location: "Victoria Island, Lagos",
@@ -78,6 +86,8 @@ export const PROPERTIES = [
   },
   {
     id: 4,
+    listingId: "RB-10274",
+    verified: true,
     listingType: "sale",
     title: "4 Bedroom Terrace Duplex",
     location: "Chevron, Lekki, Lagos",
@@ -92,6 +102,8 @@ export const PROPERTIES = [
   },
   {
     id: 5,
+    listingId: "RB-10288",
+    verified: false,
     listingType: "rent",
     title: "Cozy Studio Apartment",
     location: "Yaba, Lagos",
@@ -106,6 +118,8 @@ export const PROPERTIES = [
   },
   {
     id: 6,
+    listingId: "RB-10301",
+    verified: true,
     listingType: "sale",
     title: "5 Bedroom Detached Duplex",
     location: "Banana Island, Lagos",
@@ -162,6 +176,12 @@ const Area = () => (
 );
 const Close = () => (
   <Icon size={20}><path d="M18 6L6 18M6 6l12 12" /></Icon>
+);
+const ShieldCheck = ({ size = 13 }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <path d="M12 2.5l7.5 3.5v5c0 5-3.2 8.8-7.5 10.5C7.7 19.8 4.5 16 4.5 11V6L12 2.5z" />
+    <path d="M8.8 12l2.3 2.3 4.1-4.6" />
+  </svg>
 );
 
 /* ---------- Image slider (used in cards and modal) ---------- */
@@ -257,14 +277,14 @@ function Slider({ images, alt, large = false, badge, badgeType, children }) {
 
 /* ---------- Property card ---------- */
 function PropertyCard({ property, liked, onToggleLike, onOpen }) {
-  const { title, location, price, beds, baths, sqft, images, listingType } = property;
+  const { title, location, price, beds, baths, sqft, images, listingType, listingId, verified } = property;
 
   return (
     <article
       className="card"
       tabIndex={0}
       role="button"
-      aria-label={`View ${title}`}
+      aria-label={`View ${title}${verified ? ", verified listing" : ""}`}
       onClick={() => onOpen(property)}
       onKeyDown={(e) => {
         if (e.target === e.currentTarget && (e.key === "Enter" || e.key === " ")) {
@@ -285,9 +305,15 @@ function PropertyCard({ property, liked, onToggleLike, onOpen }) {
         >
           <Heart filled={liked} />
         </button>
+        {verified && (
+          <span className="verified-badge" title="Verified by RentBridge">
+            <ShieldCheck /> Verified
+          </span>
+        )}
       </Slider>
 
       <div className="card__body">
+        {listingId && <p className="card__id">ID: {listingId}</p>}
         <h3 className="card__title">{title}</h3>
         <p className="card__location">{location}</p>
         <p className="card__price">
@@ -305,7 +331,7 @@ function PropertyCard({ property, liked, onToggleLike, onOpen }) {
 
 /* ---------- Listing details modal ---------- */
 function ListingModal({ property, liked, onToggleLike, onClose }) {
-  const { title, location, price, beds, baths, sqft, description, amenities, images, listingType } = property;
+  const { title, location, price, beds, baths, sqft, description, amenities, images, listingType, listingId, verified } = property;
 
   useEffect(() => {
     const onKey = (e) => e.key === "Escape" && onClose();
@@ -325,11 +351,18 @@ function ListingModal({ property, liked, onToggleLike, onClose }) {
           <Close />
         </button>
 
-        <Slider images={images} alt={title} large badge={LISTING_LABEL[listingType]} badgeType={listingType} />
+        <Slider images={images} alt={title} large badge={LISTING_LABEL[listingType]} badgeType={listingType}>
+          {verified && (
+            <span className="verified-badge verified-badge--large" title="Verified by RentBridge">
+              <ShieldCheck size={15} /> Verified listing
+            </span>
+          )}
+        </Slider>
 
         <div className="modal__content">
           <div className="modal__head">
             <div>
+              {listingId && <p className="card__id">ID: {listingId}</p>}
               <h2>{title}</h2>
               <p className="card__location">{location}</p>
             </div>
@@ -337,6 +370,13 @@ function ListingModal({ property, liked, onToggleLike, onClose }) {
               {naira(price)} <span>{priceSuffix(listingType)}</span>
             </p>
           </div>
+
+          {verified && (
+            <p className="security-note">
+              <ShieldCheck size={14} /> This listing has been verified by our team. Always view a
+              property in person and avoid sending payment before an in-person or video viewing.
+            </p>
+          )}
 
           <ul className="card__meta card__meta--large">
             <li><Bed /> {beds} {beds === 1 ? "Bedroom" : "Bedrooms"}</li>
@@ -355,15 +395,9 @@ function ListingModal({ property, liked, onToggleLike, onClose }) {
           <div className="modal__actions">
             <button
               className="btn btn--primary"
-              onClick={() =>
-                alert(
-                  listingType === "rent"
-                    ? "Hook this up to your 'request to rent' flow"
-                    : "Hook this up to your 'make an offer / buy' flow"
-                )
-              }
+              onClick={() => alert("Hook this up to your contact-agent flow (call, WhatsApp, or a message form)")}
             >
-              {listingType === "rent" ? "Rent this property" : "Buy this property"}
+              Contact agent
             </button>
             <button className="btn btn--ghost" onClick={() => onToggleLike(property.id)}>
               <Heart filled={liked} /> {liked ? "Saved" : "Save"}
