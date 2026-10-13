@@ -97,9 +97,9 @@ export default function AboutSection() {
             ))}
           </ul>
 
-          <a href="./properties" className="about__cta">
+          <Link to="/properties" className="about__cta">
             Browse properties <ArrowRight />
-          </a>
+          </Link>
         </div>
 
         <div className="about__divider">
