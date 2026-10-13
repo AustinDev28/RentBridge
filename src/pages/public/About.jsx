@@ -1,4 +1,5 @@
 import "./About.css";
+import { Link } from "react-router-dom";
 
 /* ---------- Icons (same style as FeaturedProperties icons) ---------- */
 const Icon = ({ children, size = 20 }) => (
