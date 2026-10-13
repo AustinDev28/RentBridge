@@ -38,7 +38,6 @@ import banana4 from "../assets/properties/banana-4.jpg";
 export const PROPERTIES = [
   {
     id: 1,
-    listingId: "RB-10231",
     verified: true,
     listingType: "rent", // "rent" or "sale"
     title: "Modern 2 Bedroom Apartment",
@@ -54,7 +53,6 @@ export const PROPERTIES = [
   },
   {
     id: 2,
-    listingId: "RB-10247",
     verified: true,
     listingType: "sale",
     title: "Luxury 3 Bedroom Duplex",
@@ -70,7 +68,6 @@ export const PROPERTIES = [
   },
   {
     id: 3,
-    listingId: "RB-10259",
     verified: false,
     listingType: "rent",
     title: "Spacious 1 Bedroom Apartment",
@@ -86,7 +83,6 @@ export const PROPERTIES = [
   },
   {
     id: 4,
-    listingId: "RB-10274",
     verified: true,
     listingType: "sale",
     title: "4 Bedroom Terrace Duplex",
@@ -102,7 +98,6 @@ export const PROPERTIES = [
   },
   {
     id: 5,
-    listingId: "RB-10288",
     verified: false,
     listingType: "rent",
     title: "Cozy Studio Apartment",
@@ -118,7 +113,6 @@ export const PROPERTIES = [
   },
   {
     id: 6,
-    listingId: "RB-10301",
     verified: true,
     listingType: "sale",
     title: "5 Bedroom Detached Duplex",

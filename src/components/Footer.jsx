@@ -18,18 +18,18 @@ export default function Footer() {
           <div className="footer-column">
             <h3>Explore</h3>
             <Link to="/properties">Properties</Link>
-            <Link to="./safetytips">SafetyTips</Link>
+            <Link to="/safetytips">SafetyTips</Link>
           </div>
 
           <div className="footer-column">
             <h3>For Agents</h3>
-            <Link to="./agents-login">Agent Login</Link>
+            <Link to="/agents-login">Agent Login</Link>
           </div>
 
           <div className="footer-column">
             <h3>Company</h3>
-            <a href="./about">About Us</a>
-            <a href="./contacts">Contact Us</a>
+            <Link to="/about">About Us</Link>
+            <Link to="/contacts">Contact Us</Link>
           </div>
 
         </div>
@@ -38,9 +38,9 @@ export default function Footer() {
           <p>© 2026 RentBridge</p>
 
           <div className="footer-legal">
-            <a href="./privacy">Privacy Policy</a>
+            <Link to="/privacy">Privacy Policy</Link>
             <span>|</span>
-            <a href="./terms">Terms and Conditions</a>
+            <Link to="/terms">Terms and Conditions</Link>
           </div>
         </div>
 
