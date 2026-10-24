@@ -25,6 +25,9 @@ export default function Navbar() {
                <a href="./safetytips">
               <ShieldCheck size="{16}" /> Safety-Tips
                </a>
+               <a href="/agent/login">
+                 <Users size="{12}" /> Agents-Login
+               </a>
              </div>
          {/* Hamburger button - mobile only */}
       <button
@@ -44,6 +47,7 @@ export default function Navbar() {
           <li><Link to="/properties" onClick={() => setIsOpen(false)}>Properties</Link></li>
           <li><Link to="/about" onClick={() => setIsOpen(false)}>About</Link></li>
           <li><Link to="/safetytips" onClick={() => setIsOpen(false)}>Safety-Tips</Link></li>
+          <li><Link to="/agent/login" onClick={() => setIsOpen(false)}>Agents-Login</Link></li>
         </ul>
       )}
         </section>

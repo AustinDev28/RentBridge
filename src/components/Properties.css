@@ -166,6 +166,13 @@
 
   .rb-content-grid .featured__grid { grid-template-columns: 1fr; }
   .rb-nav { display: none; }
+
+  .rb-search-hint {
+  margin: 8px 0 0;
+  font-size: 17px;
+  color: #1a1b1c;
+}
+
 }
 
 @media (max-width: 600px) {

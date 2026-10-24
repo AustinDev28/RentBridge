@@ -23,7 +23,7 @@ export default function Footer() {
 
           <div className="footer-column">
             <h3>For Agents</h3>
-            <Link to="/agents-login">Agent Login</Link>
+            <Link to="/agent/login">Agent Login</Link>
           </div>
 
           <div className="footer-column">

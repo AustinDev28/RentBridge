@@ -1,7 +1,15 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import "./FeaturedProperties.css";
 
-/* Property Images section*/
+/* ============================================================
+   YOUR IMAGES
+   1. Create the folder: src/assets/properties/
+   2. Drop your photos in there (name them however you like)
+   3. Update the file names below to match your real files
+   4. Add or remove lines/entries as needed — each listing can
+      have as many images as you want, just add more imports
+      and add them to that listing's images array further down.
+   ============================================================ */
 
 // --- Modern 2 Bedroom Apartment (Lekki Phase 1) ---
 import lekki1 from "../assets/properties/lekki-1.jpg";
@@ -40,6 +48,7 @@ export const PROPERTIES = [
     id: 1,
     verified: true,
     listingType: "rent", // "rent" or "sale"
+    category: "Flats", // matches the hero's Property Type dropdown
     title: "Modern 2 Bedroom Apartment",
     location: "Lekki Phase 1, Lagos",
     price: 2500000,
@@ -55,6 +64,7 @@ export const PROPERTIES = [
     id: 2,
     verified: true,
     listingType: "sale",
+    category: "Duplex",
     title: "Luxury 3 Bedroom Duplex",
     location: "Ikoyi, Lagos",
     price: 185000000,
@@ -70,6 +80,7 @@ export const PROPERTIES = [
     id: 3,
     verified: false,
     listingType: "rent",
+    category: "Apartment",
     title: "Spacious 1 Bedroom Apartment",
     location: "Victoria Island, Lagos",
     price: 1800000,
@@ -85,6 +96,7 @@ export const PROPERTIES = [
     id: 4,
     verified: true,
     listingType: "sale",
+    category: "Duplex",
     title: "4 Bedroom Terrace Duplex",
     location: "Chevron, Lekki, Lagos",
     price: 120000000,
@@ -100,6 +112,7 @@ export const PROPERTIES = [
     id: 5,
     verified: false,
     listingType: "rent",
+    category: "Self Contain",
     title: "Cozy Studio Apartment",
     location: "Yaba, Lagos",
     price: 1200000,
@@ -115,6 +128,7 @@ export const PROPERTIES = [
     id: 6,
     verified: true,
     listingType: "sale",
+    category: "House",
     title: "5 Bedroom Detached Duplex",
     location: "Banana Island, Lagos",
     price: 650000000,
@@ -227,35 +241,40 @@ function Slider({ images, alt, large = false, badge, badgeType, children }) {
             />
           ))}
         </div>
+
+        {/* These must stay inside .slider__viewport — it's the positioned
+            ancestor (position: relative, set in the CSS) that anchors
+            them to the photo. Moving them outside this div is what
+            causes the badge/arrows to float relative to the whole page. */}
+        {badge && (
+          <span className={`badge ${badgeType === "sale" ? "badge--sale" : ""}`}>
+            {badge}
+          </span>
+        )}
+        {children}
+
+        {count > 1 && (
+          <>
+            <button className="slider__arrow slider__arrow--prev" onClick={(e) => stop(e, -1)} aria-label="Previous image">
+              <Chevron dir="left" />
+            </button>
+            <button className="slider__arrow slider__arrow--next" onClick={(e) => stop(e, 1)} aria-label="Next image">
+              <Chevron dir="right" />
+            </button>
+
+            {large ? (
+              <span className="slider__count">{index + 1} / {count}</span>
+            ) : (
+              <div className="slider__dots">
+                {images.map((_, i) => (
+                  <span key={i} className={i === index ? "is-active" : ""} />
+                ))}
+              </div>
+            )}
+          </>
+        )}
       </div>
 
-      {badge && (
-        <span className={`badge ${badgeType === "sale" ? "badge--sale" : ""}`}>
-          {badge}
-        </span>
-      )}
-      {children}
-
-      {count > 1 && (
-        <>
-          <button className="slider__arrow slider__arrow--prev" onClick={(e) => stop(e, -1)} aria-label="Previous image">
-            <Chevron dir="left" />
-          </button>
-          <button className="slider__arrow slider__arrow--next" onClick={(e) => stop(e, 1)} aria-label="Next image">
-            <Chevron dir="right" />
-          </button>
-
-          {large ? (
-            <span className="slider__count">{index + 1} / {count}</span>
-          ) : (
-            <div className="slider__dots">
-              {images.map((_, i) => (
-                <span key={i} className={i === index ? "is-active" : ""} />
-              ))}
-            </div>
-          )}
-        </>
-      )}
       {large && count > 1 && (
         <div className="slider__thumbs">
           {images.map((src, i) => (
@@ -271,7 +290,7 @@ function Slider({ images, alt, large = false, badge, badgeType, children }) {
 
 /* ---------- Property card ---------- */
 function PropertyCard({ property, liked, onToggleLike, onOpen }) {
-  const { title, location, price, beds, baths, sqft, images, listingType, listingId, verified } = property;
+  const { title, location, price, beds, baths, sqft, images, listingType, verified } = property;
 
   return (
     <article
@@ -307,7 +326,6 @@ function PropertyCard({ property, liked, onToggleLike, onOpen }) {
       </Slider>
 
       <div className="card__body">
-        {listingId && <p className="card__id">ID: {listingId}</p>}
         <h3 className="card__title">{title}</h3>
         <p className="card__location">{location}</p>
         <p className="card__price">
@@ -325,7 +343,7 @@ function PropertyCard({ property, liked, onToggleLike, onOpen }) {
 
 /* ---------- Listing details modal ---------- */
 function ListingModal({ property, liked, onToggleLike, onClose }) {
-  const { title, location, price, beds, baths, sqft, description, amenities, images, listingType, listingId, verified } = property;
+  const { title, location, price, beds, baths, sqft, description, amenities, images, listingType, verified } = property;
 
   useEffect(() => {
     const onKey = (e) => e.key === "Escape" && onClose();
@@ -356,7 +374,6 @@ function ListingModal({ property, liked, onToggleLike, onClose }) {
         <div className="modal__content">
           <div className="modal__head">
             <div>
-              {listingId && <p className="card__id">ID: {listingId}</p>}
               <h2>{title}</h2>
               <p className="card__location">{location}</p>
             </div>
@@ -409,11 +426,17 @@ const FILTERS = [
   { key: "sale", label: "For Sale" },
 ];
 
-/* ---------- Section ---------- */
-export default function FeaturedProperties({ properties = PROPERTIES }) {
+const EMPTY_SEARCH = { location: "", propertyType: "", minPrice: "", maxPrice: "" };
+
+/**
+ * searchFilters (optional): { location, propertyType, minPrice, maxPrice }
+ * Pass this down from your hero search bar — see Home.jsx for the wiring.
+ * Any field left as "" is ignored.
+ */
+export default function FeaturedProperties({ properties = PROPERTIES, searchFilters }) {
   const [selected, setSelected] = useState(null);
   const [liked, setLiked] = useState(() => new Set());
-  const [filter, setFilter] = useState("all");
+  const [filter, setFilter] = useState("all"); // rent / sale quick pills
 
   const toggleLike = useCallback((id) => {
     setLiked((prev) => {
@@ -425,8 +448,21 @@ export default function FeaturedProperties({ properties = PROPERTIES }) {
 
   const close = useCallback(() => setSelected(null), []);
 
-  const visible =
-    filter === "all" ? properties : properties.filter((p) => p.listingType === filter);
+  const s = { ...EMPTY_SEARCH, ...searchFilters };
+  const hasActiveSearch = s.location || s.propertyType || s.minPrice || s.maxPrice;
+
+  const visible = properties.filter((p) => {
+    if (filter !== "all" && p.listingType !== filter) return false;
+
+    if (s.location && !p.location.toLowerCase().includes(s.location.trim().toLowerCase())) {
+      return false;
+    }
+    if (s.propertyType && p.category !== s.propertyType) return false;
+    if (s.minPrice && p.price < Number(s.minPrice)) return false;
+    if (s.maxPrice && p.price > Number(s.maxPrice)) return false;
+
+    return true;
+  });
 
   return (
     <section className="featured" id="properties">
@@ -434,10 +470,31 @@ export default function FeaturedProperties({ properties = PROPERTIES }) {
         <header className="featured__header">
           <div>
             <h2>Featured Properties</h2>
-            <p>Handpicked properties for you</p>
+            <p>
+              {hasActiveSearch
+                ? `${visible.length} ${visible.length === 1 ? "result" : "results"} found`
+                : "Handpicked properties for you"}
+            </p>
           </div>
           <a href="#properties" className="featured__viewall">View all</a>
         </header>
+
+        {hasActiveSearch && (
+          <div className="featured__searchsummary">
+            <span>
+              Showing results
+              {s.location && <> in <strong>{s.location}</strong></>}
+              {s.propertyType && <> · <strong>{s.propertyType}</strong></>}
+              {(s.minPrice || s.maxPrice) && (
+                <>
+                  {" "}· <strong>
+                    {s.minPrice ? naira(Number(s.minPrice)) : "₦0"} – {s.maxPrice ? naira(Number(s.maxPrice)) : "Any"}
+                  </strong>
+                </>
+              )}
+            </span>
+          </div>
+        )}
 
         <div className="featured__filters" role="tablist" aria-label="Filter properties by listing type">
           {FILTERS.map((f) => (
@@ -454,7 +511,10 @@ export default function FeaturedProperties({ properties = PROPERTIES }) {
         </div>
 
         {visible.length === 0 ? (
-          <p className="featured__empty">No properties match this filter yet.</p>
+          <p className="featured__empty">
+            No properties match {hasActiveSearch ? "your search" : "this filter"} yet. Try
+            widening your price range or clearing a filter.
+          </p>
         ) : (
           <div className="featured__grid">
             {visible.map((p) => (
