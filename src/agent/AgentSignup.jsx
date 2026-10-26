@@ -1,4 +1,4 @@
-// MOCK ONLY - replace with real backend before production
+// MOCK Data Embedded in the code snippet provided//
 import { useState } from "react";
 import { Eye, EyeOff, ShieldCheck } from "lucide-react";
 import { Link, Navigate, useNavigate } from "react-router-dom";

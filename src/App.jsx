@@ -10,6 +10,8 @@ import AgentLogin from './agent/AgentLogin.jsx';
 import AgentSignup from './agent/AgentSignup.jsx';
 import AgentDashboard from './agent/AgentDashboard.jsx';
 import AgentRouteGuard from './agent/AgentRouteGuard.jsx';
+import PrivacyPolicy from './pages/public/PrivacyPolicy.jsx';
+import Terms from './pages/public/Terms.jsx';
 function App() {
   return (
     <>
@@ -20,6 +22,8 @@ function App() {
       <Route path="/safetytips" element={<SafetyTips />} />
       <Route path="/properties" element={<Properties/>} />
       <Route path="/about" element={<About />} />
+      <Route path="/privacy" element={<PrivacyPolicy />} />
+      <Route path="/terms" element={<Terms />} />
       <Route path="/agent/login" element={<AgentLogin />} />
       <Route path="/agent/signup" element={<AgentSignup />} />
       <Route

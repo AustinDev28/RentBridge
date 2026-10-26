@@ -49,6 +49,7 @@ export const PROPERTIES = [
     verified: true,
     listingType: "rent", // "rent" or "sale"
     category: "Flats", // matches the hero's Property Type dropdown
+    agentPhone: "+2348012345678",
     title: "Modern 2 Bedroom Apartment",
     location: "Lekki Phase 1, Lagos",
     price: 2500000,
@@ -65,6 +66,7 @@ export const PROPERTIES = [
     verified: true,
     listingType: "sale",
     category: "Duplex",
+    agentPhone: "+2348012345678",
     title: "Luxury 3 Bedroom Duplex",
     location: "Ikoyi, Lagos",
     price: 185000000,
@@ -81,6 +83,7 @@ export const PROPERTIES = [
     verified: false,
     listingType: "rent",
     category: "Apartment",
+    agentPhone: "+2348012345678",
     title: "Spacious 1 Bedroom Apartment",
     location: "Victoria Island, Lagos",
     price: 1800000,
@@ -97,6 +100,7 @@ export const PROPERTIES = [
     verified: true,
     listingType: "sale",
     category: "Duplex",
+    agentPhone: "+2348012345678",
     title: "4 Bedroom Terrace Duplex",
     location: "Chevron, Lekki, Lagos",
     price: 120000000,
@@ -113,6 +117,7 @@ export const PROPERTIES = [
     verified: false,
     listingType: "rent",
     category: "Self Contain",
+    agentPhone: "+2348012345678",
     title: "Cozy Studio Apartment",
     location: "Yaba, Lagos",
     price: 1200000,
@@ -129,6 +134,7 @@ export const PROPERTIES = [
     verified: true,
     listingType: "sale",
     category: "House",
+    agentPhone: "+2348012345678",
     title: "5 Bedroom Detached Duplex",
     location: "Banana Island, Lagos",
     price: 650000000,
@@ -242,10 +248,7 @@ function Slider({ images, alt, large = false, badge, badgeType, children }) {
           ))}
         </div>
 
-        {/* These must stay inside .slider__viewport — it's the positioned
-            ancestor (position: relative, set in the CSS) that anchors
-            them to the photo. Moving them outside this div is what
-            causes the badge/arrows to float relative to the whole page. */}
+        {/* Slider viewport for image batch type */}
         {badge && (
           <span className={`badge ${badgeType === "sale" ? "badge--sale" : ""}`}>
             {badge}
@@ -344,6 +347,16 @@ function PropertyCard({ property, liked, onToggleLike, onOpen }) {
 /* ---------- Listing details modal ---------- */
 function ListingModal({ property, liked, onToggleLike, onClose }) {
   const { title, location, price, beds, baths, sqft, description, amenities, images, listingType, verified } = property;
+  const contactAgent = () => {
+    const phone = property.agentPhone?.replace(/\D/g, "");
+    if (!phone) {
+      window.alert("The agent has not added a contact number for this property yet.");
+      return;
+    }
+
+    const message = `Hello, I'm interested in ${title} in ${location}. Is it still available?`;
+    window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`, "_blank", "noopener,noreferrer");
+  };
 
   useEffect(() => {
     const onKey = (e) => e.key === "Escape" && onClose();
@@ -406,7 +419,7 @@ function ListingModal({ property, liked, onToggleLike, onClose }) {
           <div className="modal__actions">
             <button
               className="btn btn--primary"
-              onClick={() => alert("Hook this up to your contact-agent flow (call, WhatsApp, or a message form)")}
+              onClick={contactAgent}
             >
               Contact agent
             </button>

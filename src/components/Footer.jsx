@@ -29,7 +29,6 @@ export default function Footer() {
           <div className="footer-column">
             <h3>Company</h3>
             <Link to="/about">About Us</Link>
-            <Link to="/contacts">Contact Us</Link>
           </div>
 
         </div>
