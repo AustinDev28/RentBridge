@@ -157,6 +157,97 @@
   opacity: 0.85;
 }
 
+.report-success {
+  margin: 18px auto 0 !important;
+  color: #166534;
+  font-size: 15px !important;
+  font-weight: 600 !important;
+}
+
+.listing-report-form {
+  max-width: 620px;
+  margin: 28px auto 0;
+  padding: 24px;
+  border: 1px solid #d8dee8;
+  border-radius: 12px;
+  background: #fff;
+  text-align: left;
+}
+
+.listing-report-form h3 {
+  margin: 0 0 8px;
+  color: #172033;
+  font-size: 21px;
+}
+
+.listing-report-form__note {
+  margin: 0 0 18px !important;
+  color: #596579;
+  font-size: 14px !important;
+  line-height: 1.55 !important;
+}
+
+.listing-report-form > label,
+.listing-report-form__manual label {
+  display: block;
+  margin: 16px 0 7px;
+  color: #344054;
+  font-size: 14px;
+  font-weight: 650;
+}
+
+.listing-report-form input,
+.listing-report-form select,
+.listing-report-form textarea {
+  display: block;
+  width: 100%;
+  min-height: 44px;
+  margin-top: 7px;
+  padding: 10px 12px;
+  border: 1px solid #cbd3df;
+  border-radius: 7px;
+  background: #fff;
+  color: #172033;
+  font: inherit;
+  font-size: 15px;
+}
+
+.listing-report-form textarea { resize: vertical; }
+.listing-report-form input:focus,
+.listing-report-form select:focus,
+.listing-report-form textarea:focus { outline: 2px solid #2563eb; outline-offset: 1px; }
+
+.listing-report-form__manual {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 14px;
+  margin: 4px 0 10px;
+  padding: 0 14px 14px;
+  border: 1px solid #e3e8ef;
+  border-radius: 8px;
+  background: #fafbfd;
+}
+
+.listing-report-form__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 22px;
+}
+
+.report-section .listing-report-form__actions button {
+  min-height: 42px;
+  padding: 10px 17px;
+  border-radius: 7px;
+  font-size: 14px;
+}
+
+.report-section .listing-report-form__actions .report-cancel {
+  border: 1px solid #cbd3df;
+  background: #fff;
+  color: #344054;
+}
+
 
 /* ==============================
    MOBILE RESPONSIVENESS
@@ -200,4 +291,7 @@
   .report-section h2 {
     font-size: 22px;
   }
+
+  .listing-report-form { padding: 18px; }
+  .listing-report-form__manual { grid-template-columns: 1fr; }
 }

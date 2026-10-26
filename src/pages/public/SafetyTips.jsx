@@ -1,6 +1,47 @@
 import "./SafetyTips.css";
+import { useState } from "react";
+import { getReportableListings, saveListingReport } from "./listingReports.js";
 
 export default function SafetyTips() {
+  const [reportOpen, setReportOpen] = useState(false);
+  const [reportListings, setReportListings] = useState([]);
+  const [reportNotice, setReportNotice] = useState("");
+
+  const openReportForm = () => {
+    setReportListings(getReportableListings());
+    setReportNotice("");
+    setReportOpen(true);
+  };
+
+  const submitReport = (event) => {
+    event.preventDefault();
+    const form = new FormData(event.currentTarget);
+    const listingId = form.get("listing");
+    const listing = reportListings.find((item) => item.id === listingId);
+    const listingTitle = String(form.get("listingTitle")).trim();
+    const listingUrl = String(form.get("listingUrl")).trim();
+
+    if (!listing && !listingTitle && !listingUrl) {
+      setReportNotice("Add the listing title or its link so we can identify it.");
+      return;
+    }
+
+    saveListingReport({
+      listingId: listing?.id || "other",
+      listingTitle: listing?.title || listingTitle,
+      listingLocation: listing?.location || String(form.get("listingLocation")).trim(),
+      agentName: listing?.agentName || String(form.get("agentName")).trim(),
+      listingUrl,
+      reason: String(form.get("reason")),
+      details: String(form.get("details")).trim(),
+      reporterEmail: String(form.get("reporterEmail")).trim(),
+    });
+
+    setReportOpen(false);
+    setReportNotice("Your report has been saved in this browser.");
+    event.currentTarget.reset();
+  };
+
   return (
     <div className="safety-page">
 
@@ -89,13 +130,64 @@ export default function SafetyTips() {
         <h2>Something doesn't look right?</h2>
 
         <p>
-          If you believe a property or agent may be suspicious, stop communicating and
-          report it to RentBridge so it can be reviewed and dealt with strictly.
+          If you believe an agent listing is fraudulent or misleading, share the listing
+          and what concerned you. Do not send money while you investigate.
         </p>
 
-        <button type="button-1">
+        <button type="button" onClick={openReportForm}>
           Report a Listing
         </button>
+
+        {reportNotice && <p className="report-success" role="status">{reportNotice}</p>}
+
+        {reportOpen && (
+          <form className="listing-report-form" onSubmit={submitReport}>
+            <h3>Report a property listing</h3>
+            <p className="listing-report-form__note">
+              Reports are saved in this browser and are not sent to RentBridge’s team.
+              Avoid including passwords, financial details, or identity documents.
+            </p>
+
+            <label htmlFor="report-listing">Select the listing</label>
+            <select id="report-listing" name="listing" defaultValue="" required>
+              <option value="" disabled>Choose an agent listing</option>
+              {reportListings.map((listing) => (
+                <option value={listing.id} key={listing.id}>
+                  {listing.title} — {listing.agentName} ({listing.location})
+                </option>
+              ))}
+              <option value="other">I can’t find the listing</option>
+            </select>
+
+            <div className="listing-report-form__manual">
+              <label>Listing title<input name="listingTitle" type="text" placeholder="Property title" /></label>
+              <label>Agent name, if known<input name="agentName" type="text" placeholder="Agent or agency" /></label>
+              <label>Listing link, if available<input name="listingUrl" type="url" placeholder="https://…" /></label>
+              <label>Property location<input name="listingLocation" type="text" placeholder="Area and city" /></label>
+            </div>
+
+            <label htmlFor="report-reason">What is the concern?</label>
+            <select id="report-reason" name="reason" defaultValue="" required>
+              <option value="" disabled>Select a reason</option>
+              <option value="suspected-scam">Suspected scam or request for advance payment</option>
+              <option value="false-information">False or misleading listing details</option>
+              <option value="unauthorized">Agent may not be authorized to list the property</option>
+              <option value="duplicate">Duplicate or already unavailable listing</option>
+              <option value="other">Other concern</option>
+            </select>
+
+            <label htmlFor="report-details">What happened?</label>
+            <textarea id="report-details" name="details" rows="4" required maxLength="2000" placeholder="Share the facts that led you to report this listing." />
+
+            <label htmlFor="report-email">Your email (optional, if follow-up is needed)</label>
+            <input id="report-email" name="reporterEmail" type="email" autoComplete="email" />
+
+            <div className="listing-report-form__actions">
+              <button type="button" className="report-cancel" onClick={() => setReportOpen(false)}>Cancel</button>
+              <button type="submit">Save report</button>
+            </div>
+          </form>
+        )}
 
       </section>
 
