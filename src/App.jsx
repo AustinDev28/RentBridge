@@ -1,5 +1,4 @@
-import { useState } from 'react';
-import {Routes, Route} from "react-router-dom";
+import {Routes, Route, useLocation} from "react-router-dom";
 import Navbar from "./components/Navbar.jsx";
 import Footer from "./components/Footer.jsx";
 import Home from "./pages/public/Home.jsx";
@@ -12,10 +11,14 @@ import AgentDashboard from './agent/AgentDashboard.jsx';
 import AgentRouteGuard from './agent/AgentRouteGuard.jsx';
 import PrivacyPolicy from './pages/public/PrivacyPolicy.jsx';
 import Terms from './pages/public/Terms.jsx';
+import UserAuth from './pages/public/UserAuth.jsx';
+import UserProfile from './pages/public/UserProfile.jsx';
 function App() {
+  const { pathname } = useLocation();
+  const isHomeFeed = pathname === "/";
   return (
     <>
-    <Navbar />
+    {!isHomeFeed && <Navbar />}
 
     <Routes>
       <Route path="/" element={<Home />} />
@@ -26,6 +29,9 @@ function App() {
       <Route path="/terms" element={<Terms />} />
       <Route path="/agent/login" element={<AgentLogin />} />
       <Route path="/agent/signup" element={<AgentSignup />} />
+      <Route path="/user/login" element={<UserAuth />} />
+      <Route path="/user/signup" element={<UserAuth signup />} />
+      <Route path="/user/profile" element={<UserProfile />} />
       <Route
         path="/agent/dashboard"
         element={
@@ -36,7 +42,7 @@ function App() {
       />
     </Routes>
 
-    <Footer />
+    {!isHomeFeed && <Footer />}
     </>
   )
 }

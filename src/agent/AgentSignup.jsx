@@ -1,4 +1,4 @@
-// MOCK Data Embedded in the code snippet provided//
+//*MOCK DATA FOR DEMO PURPOSES ONLY*//
 import { useState } from "react";
 import { Eye, EyeOff, ShieldCheck } from "lucide-react";
 import { Link, Navigate, useNavigate } from "react-router-dom";

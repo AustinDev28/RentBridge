@@ -1,15 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import "./FeaturedProperties.css";
 
-/* ============================================================
-   YOUR IMAGES
-   1. Create the folder: src/assets/properties/
-   2. Drop your photos in there (name them however you like)
-   3. Update the file names below to match your real files
-   4. Add or remove lines/entries as needed — each listing can
-      have as many images as you want, just add more imports
-      and add them to that listing's images array further down.
-   ============================================================ */
+/* Image importing section just a property image listing mockup mockup*/
 
 // --- Modern 2 Bedroom Apartment (Lekki Phase 1) ---
 import lekki1 from "../assets/properties/lekki-1.jpg";
@@ -43,6 +35,14 @@ import banana2 from "../assets/properties/banana-2.jpg";
 import banana3 from "../assets/properties/banana-3.jpg";
 import banana4 from "../assets/properties/banana-4.jpg";
 
+const SAMPLE_AGENT = {
+  id: "agent-demo",
+  name: "Demo Agent",
+  agency: "Bridge Homes Realty",
+  location: "Lagos, Nigeria",
+  bio: "Helping people find a place to call home. Ask me about viewings, property details, and the areas I serve.",
+};
+
 export const PROPERTIES = [
   {
     id: 1,
@@ -50,6 +50,7 @@ export const PROPERTIES = [
     listingType: "rent", // "rent" or "sale"
     category: "Flats", // matches the hero's Property Type dropdown
     agentPhone: "+2348012345678",
+    agent: SAMPLE_AGENT,
     title: "Modern 2 Bedroom Apartment",
     location: "Lekki Phase 1, Lagos",
     price: 2500000,
@@ -67,6 +68,7 @@ export const PROPERTIES = [
     listingType: "sale",
     category: "Duplex",
     agentPhone: "+2348012345678",
+    agent: SAMPLE_AGENT,
     title: "Luxury 3 Bedroom Duplex",
     location: "Ikoyi, Lagos",
     price: 185000000,
@@ -84,6 +86,7 @@ export const PROPERTIES = [
     listingType: "rent",
     category: "Apartment",
     agentPhone: "+2348012345678",
+    agent: SAMPLE_AGENT,
     title: "Spacious 1 Bedroom Apartment",
     location: "Victoria Island, Lagos",
     price: 1800000,
@@ -101,6 +104,7 @@ export const PROPERTIES = [
     listingType: "sale",
     category: "Duplex",
     agentPhone: "+2348012345678",
+    agent: SAMPLE_AGENT,
     title: "4 Bedroom Terrace Duplex",
     location: "Chevron, Lekki, Lagos",
     price: 120000000,
@@ -118,6 +122,7 @@ export const PROPERTIES = [
     listingType: "rent",
     category: "Self Contain",
     agentPhone: "+2348012345678",
+    agent: SAMPLE_AGENT,
     title: "Cozy Studio Apartment",
     location: "Yaba, Lagos",
     price: 1200000,
@@ -135,6 +140,7 @@ export const PROPERTIES = [
     listingType: "sale",
     category: "House",
     agentPhone: "+2348012345678",
+    agent: SAMPLE_AGENT,
     title: "5 Bedroom Detached Duplex",
     location: "Banana Island, Lagos",
     price: 650000000,
@@ -292,12 +298,14 @@ function Slider({ images, alt, large = false, badge, badgeType, children }) {
 }
 
 /* ---------- Property card ---------- */
-function PropertyCard({ property, liked, onToggleLike, onOpen }) {
+function PropertyCard({ property, liked, onToggleLike, onOpen, onOpenAgent, feedMode = false }) {
   const { title, location, price, beds, baths, sqft, images, listingType, verified } = property;
+  const agent = property.agent || { name: "RentBridge Agent", agency: "Independent agent", bio: "Contact this agent for more information about the listing." };
+  const initials = agent.name.split(/\s+/).slice(0, 2).map((part) => part[0]).join("").toUpperCase();
 
   return (
     <article
-      className="card"
+      className={`card ${feedMode ? "card--feed" : ""}`}
       tabIndex={0}
       role="button"
       aria-label={`View ${title}${verified ? ", verified listing" : ""}`}
@@ -310,6 +318,30 @@ function PropertyCard({ property, liked, onToggleLike, onOpen }) {
       }}
     >
       <Slider images={images} alt={title} badge={LISTING_LABEL[listingType]} badgeType={listingType}>
+        {feedMode && (
+          <div className="feed-post-copy">
+            <span className="feed-post-agent">{agent.agency || "Independent agent"}{verified && <span className="feed-post-verified"><ShieldCheck size={13} /> Verified listing</span>}</span>
+            <h3>{title}</h3>
+            <p className="feed-post-location">{location}</p>
+            <p className="feed-post-price">{naira(price)} <span>{priceSuffix(listingType)}</span></p>
+            <ul className="feed-post-meta">
+              <li>{beds} bed</li><li>{baths} bath</li><li>{sqft.toLocaleString()} sqft</li>
+            </ul>
+            <button className="feed-post-details" onClick={(event) => { event.stopPropagation(); onOpen(property); }}>View property</button>
+          </div>
+        )}
+        {feedMode && (
+          <button
+            className="feed-agent-profile-button"
+            type="button"
+            aria-label={`View ${agent.name}'s profile`}
+            title={`View ${agent.name}'s profile`}
+            onClick={(event) => { event.stopPropagation(); onOpenAgent({ ...agent, initials, verified }); }}
+          >
+            <span className="feed-agent-avatar">{agent.image ? <img src={agent.image} alt="" /> : initials}</span>
+            <span className="feed-agent-open">↗</span>
+          </button>
+        )}
         <button
           className={`card__like ${liked ? "is-liked" : ""}`}
           aria-label={liked ? "Remove from saved" : "Save property"}
@@ -328,7 +360,7 @@ function PropertyCard({ property, liked, onToggleLike, onOpen }) {
         )}
       </Slider>
 
-      <div className="card__body">
+      {!feedMode && <div className="card__body">
         <h3 className="card__title">{title}</h3>
         <p className="card__location">{location}</p>
         <p className="card__price">
@@ -339,7 +371,7 @@ function PropertyCard({ property, liked, onToggleLike, onOpen }) {
           <li><Bath /> {baths}</li>
           <li><Area /> {sqft.toLocaleString()} sqft</li>
         </ul>
-      </div>
+      </div>}
     </article>
   );
 }
@@ -433,6 +465,32 @@ function ListingModal({ property, liked, onToggleLike, onClose }) {
   );
 }
 
+function AgentProfileModal({ agent, listings, onClose }) {
+  useEffect(() => {
+    const onKey = (event) => event.key === "Escape" && onClose();
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [onClose]);
+
+  return (
+    <div className="modal agent-profile-modal" onClick={onClose}>
+      <section className="agent-profile-dialog" role="dialog" aria-modal="true" aria-labelledby="feed-agent-name" onClick={(event) => event.stopPropagation()}>
+        <button className="modal__close" type="button" aria-label="Close agent profile" onClick={onClose}><Close /></button>
+        <div className="agent-profile-cover" />
+        <div className="agent-profile-details">
+          <span className="agent-profile-avatar">{agent.image ? <img src={agent.image} alt="" /> : agent.initials}</span>
+          <h2 id="feed-agent-name">{agent.name}</h2>
+          <p className="agent-profile-agency">{agent.agency || "Independent agent"}</p>
+          {agent.verified && <span className="agent-profile-verified"><ShieldCheck size={15} /> Listing verified by RentBridge</span>}
+          <p className="agent-profile-bio">{agent.bio || "Contact this agent to learn more about their listings."}</p>
+          {agent.location && <p className="agent-profile-location">{agent.location}</p>}
+          <div className="agent-profile-stats"><strong>{listings}</strong><span>{listings === 1 ? "property on RentBridge" : "properties on RentBridge"}</span></div>
+        </div>
+      </section>
+    </div>
+  );
+}
+
 const FILTERS = [
   { key: "all", label: "All" },
   { key: "rent", label: "For Rent" },
@@ -446,18 +504,24 @@ const EMPTY_SEARCH = { location: "", propertyType: "", minPrice: "", maxPrice: "
  * Pass this down from your hero search bar — see Home.jsx for the wiring.
  * Any field left as "" is ignored.
  */
-export default function FeaturedProperties({ properties = PROPERTIES, searchFilters }) {
+export default function FeaturedProperties({ properties = PROPERTIES, searchFilters, likedIds, onToggleLike, savedOnly = false, feedMode = false }) {
   const [selected, setSelected] = useState(null);
-  const [liked, setLiked] = useState(() => new Set());
+  const [selectedAgent, setSelectedAgent] = useState(null);
+  const [localLiked, setLocalLiked] = useState(() => new Set());
+  const liked = likedIds ?? localLiked;
   const [filter, setFilter] = useState("all"); // rent / sale quick pills
 
   const toggleLike = useCallback((id) => {
-    setLiked((prev) => {
+    if (onToggleLike) {
+      onToggleLike(id);
+      return;
+    }
+    setLocalLiked((prev) => {
       const next = new Set(prev);
       next.has(id) ? next.delete(id) : next.add(id);
       return next;
     });
-  }, []);
+  }, [onToggleLike]);
 
   const close = useCallback(() => setSelected(null), []);
 
@@ -465,6 +529,7 @@ export default function FeaturedProperties({ properties = PROPERTIES, searchFilt
   const hasActiveSearch = s.location || s.propertyType || s.minPrice || s.maxPrice;
 
   const visible = properties.filter((p) => {
+    if (savedOnly && !liked.has(p.id)) return false;
     if (filter !== "all" && p.listingType !== filter) return false;
 
     if (s.location && !p.location.toLowerCase().includes(s.location.trim().toLowerCase())) {
@@ -478,18 +543,18 @@ export default function FeaturedProperties({ properties = PROPERTIES, searchFilt
   });
 
   return (
-    <section className="featured" id="properties">
+    <section className={`featured ${feedMode ? "featured--feed" : ""}`} id="properties">
       <div className="featured__inner">
         <header className="featured__header">
           <div>
-            <h2>Featured Properties</h2>
+            <h2>{feedMode ? "" : "Featured Properties"}</h2>
             <p>
               {hasActiveSearch
                 ? `${visible.length} ${visible.length === 1 ? "result" : "results"} found`
                 : "Handpicked properties for you"}
             </p>
           </div>
-          <a href="#properties" className="featured__viewall">View all</a>
+          {!feedMode && <a href="#properties" className="featured__viewall">View all</a>}
         </header>
 
         {hasActiveSearch && (
@@ -537,6 +602,8 @@ export default function FeaturedProperties({ properties = PROPERTIES, searchFilt
                 liked={liked.has(p.id)}
                 onToggleLike={toggleLike}
                 onOpen={setSelected}
+                onOpenAgent={setSelectedAgent}
+                feedMode={feedMode}
               />
             ))}
           </div>
@@ -551,6 +618,7 @@ export default function FeaturedProperties({ properties = PROPERTIES, searchFilt
           onClose={close}
         />
       )}
+      {selectedAgent && <AgentProfileModal agent={selectedAgent} listings={properties.filter((property) => property.agent?.id === selectedAgent.id).length} onClose={() => setSelectedAgent(null)} />}
     </section>
   );
 }

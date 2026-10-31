@@ -1,0 +1,37 @@
+.user-profile-page { min-height: 68vh; padding: 36px 20px 64px; background: #f4f7f8; color: #172b3a; font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; transition: background .2s ease, color .2s ease; }
+.user-profile-wrap { width: min(700px, 100%); margin: 0 auto; }
+.user-profile-back { display: inline-flex; align-items: center; gap: 7px; color: #5d7476; text-decoration: none; font-size: .88rem; font-weight: 650; }
+.user-profile-back:hover { color: #167d72; }
+.user-profile-heading { display: flex; align-items: center; gap: 17px; margin: 28px 0 24px; }
+.user-profile-avatar { display: grid; place-items: center; width: 62px; height: 62px; border-radius: 50%; background: #dcece6; color: #176f65; font-size: 1.05rem; font-weight: 800; }
+.user-profile-heading p { margin: 0 0 5px; color: #167d72; font-size: .68rem; font-weight: 750; letter-spacing: .08em; }
+.user-profile-heading h1 { margin: 0; font-size: 1.55rem; }
+.user-profile-heading div > span { display: block; margin-top: 4px; color: #71808d; font-size: .86rem; }
+.user-settings-panel { margin-top: 16px; padding: 23px; border: 1px solid #e2e9e8; border-radius: 15px; background: #fff; box-shadow: 0 4px 16px rgba(23,43,58,.035); }
+.user-settings-title { display: flex; align-items: center; gap: 12px; }
+.user-settings-icon { display: grid; place-items: center; width: 42px; height: 42px; border-radius: 12px; background: #e8f3ef; color: #167d72; }
+.user-settings-title h2, .user-account-panel h2 { margin: 0; font-size: 1.03rem; }
+.user-settings-title p, .user-account-panel p { margin: 4px 0 0; color: #71808d; font-size: .82rem; }
+.user-theme-options { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 20px; }
+.user-theme-options button { display: flex; align-items: center; gap: 12px; min-height: 72px; padding: 12px; border: 1px solid #e4e9e8; border-radius: 11px; background: #fff; color: #53646c; text-align: left; cursor: pointer; }
+.user-theme-options button.is-selected { border-color: #62a99b; background: #f1f8f5; color: #176f65; box-shadow: 0 0 0 2px rgba(22,125,114,.08); }
+.user-theme-options button > span { display: grid; gap: 4px; flex: 1; }
+.user-theme-options strong { color: #253b44; font-size: .84rem; }
+.user-theme-options small { color: #71808d; font-size: .72rem; }
+.user-theme-options i { width: 15px; height: 15px; border: 1.5px solid #bbc7c5; border-radius: 50%; }
+.user-theme-options button.is-selected i { border: 5px solid #167d72; }
+.user-account-panel { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.user-logout-button { display: inline-flex; align-items: center; gap: 8px; padding: 9px 13px; border: 1px solid #e4e9e8; border-radius: 9px; background: #fff; color: #53646c; font: inherit; font-size: .82rem; font-weight: 650; cursor: pointer; }
+.user-logout-button:hover { border-color: #e0aca6; background: #fff8f7; color: #a63e34; }
+
+.user-profile-page.theme-dark { background: #101a20; color: #e7eff0; }
+.theme-dark .user-profile-back { color: #a8b9bd; }
+.theme-dark .user-profile-heading div > span, .theme-dark .user-settings-title p, .theme-dark .user-account-panel p { color: #a1b0b5; }
+.theme-dark .user-profile-avatar, .theme-dark .user-settings-icon { background: #203a39; color: #8dd0bd; }
+.theme-dark .user-settings-panel { border-color: #2a3a40; background: #18252c; box-shadow: none; }
+.theme-dark .user-theme-options button, .theme-dark .user-logout-button { border-color: #35464c; background: #1b2a31; color: #bdc9cc; }
+.theme-dark .user-theme-options button.is-selected { border-color: #4f9e8e; background: #213a39; color: #a0e1ca; }
+.theme-dark .user-theme-options strong { color: #e4eeee; }
+.theme-dark .user-theme-options small { color: #a1b0b5; }
+.theme-dark .user-account-panel h2 { color: #e4eeee; }
+@media (max-width: 560px) { .user-theme-options { grid-template-columns: 1fr; } .user-settings-panel { padding: 18px; } }

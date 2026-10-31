@@ -1,0 +1,19 @@
+.user-auth-page { min-height: 62vh; display: grid; place-items: center; padding: 48px 20px; background: #f4f7f8; color: #172b3a; font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+.user-auth-card { position: relative; width: min(100%, 440px); padding: 38px; border: 1px solid #e1e9e7; border-radius: 18px; background: #fff; box-shadow: 0 16px 45px rgba(23,43,58,.08); }
+.user-auth-back { position: absolute; top: 18px; right: 18px; display: grid; place-items: center; width: 36px; height: 36px; border-radius: 50%; color: #61716f; }
+.user-auth-icon { display: grid; place-items: center; width: 50px; height: 50px; margin-bottom: 20px; border-radius: 14px; background: #e8f3ef; color: #167d72; }
+.user-auth-eyebrow { margin: 0 0 8px; color: #167d72; font-size: .72rem; font-weight: 750; letter-spacing: .09em; }
+.user-auth-card h1 { margin: 0; font-size: 1.8rem; }
+.user-auth-subtitle { margin: 9px 0 25px; color: #71808d; font-size: .92rem; line-height: 1.5; }
+.user-auth-card form > label { display: block; margin: 17px 0 7px; color: #40515b; font-size: .86rem; font-weight: 650; }
+.user-auth-card form > input { width: 100%; height: 46px; padding: 0 13px; border: 1px solid #cbd8d5; border-radius: 8px; background: #fff; color: #172b3a; font: inherit; }
+.user-auth-card form > input:focus { outline: 3px solid rgba(22,125,114,.14); border-color: #167d72; }
+.user-auth-submit { width: 100%; height: 47px; margin-top: 22px; border: 0; border-radius: 8px; background: #167d72; color: #fff; font: inherit; font-weight: 700; cursor: pointer; }
+.user-auth-submit:hover { background: #11695f; }
+.user-auth-error { margin: 13px 0 0; color: #b42318; font-size: .88rem; }
+.user-auth-switch, .user-auth-agent { margin: 16px 0 0; color: #71808d; font-size: .86rem; text-align: center; }
+.user-auth-agent { margin-top: 22px; padding-top: 17px; border-top: 1px solid #edf0f1; font-size: .8rem; }
+.user-auth-switch a, .user-auth-agent a { color: #167d72; font-weight: 650; text-decoration: none; }
+.user-auth-switch a:hover, .user-auth-agent a:hover { text-decoration: underline; }
+.user-auth-demo { margin: 12px 0 0; color: #71808d; font-size: .75rem; text-align: center; }
+@media (max-width: 480px) { .user-auth-card { padding: 30px 22px; } }

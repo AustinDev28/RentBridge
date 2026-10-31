@@ -6,13 +6,10 @@ import FeaturedProperties, { PROPERTIES } from "./FeaturedProperties";
 const BEDROOM_OPTIONS = ["1", "2", "3", "4+"];
 const AMENITIES = ["Parking", "Generator", "Swimming Pool"];
 
-/* Fixed list, in this order. Must exactly match the `category` values
-   used in PROPERTIES (see FeaturedProperties.jsx) — otherwise a type
-   here will never match anything and silently return zero results. */
+/* Fixed list for const rentals types */
 const PROPERTY_TYPES = ["Flats", "Self Contain", "Apartment", "Duplex", "House"];
 
-/* Locations are still built from your listings, so every option here
-   is guaranteed to match at least one property. */
+/* Section for constant location*/
 const LOCATIONS = [...new Set(PROPERTIES.map((p) => p.location.split(",")[0].trim()))].sort();
 
 const PRICE_STEPS = [400000, 1000000, 2000000, 5000000, 10000000, 50000000, 100000000, 500000000, 700000000];

@@ -144,7 +144,7 @@ export default function SafetyTips() {
           <form className="listing-report-form" onSubmit={submitReport}>
             <h3>Report a property listing</h3>
             <p className="listing-report-form__note">
-              Reports are saved in this browser and are not sent to RentBridge’s team.
+              Reports are not saved in this browser they would be sent to RentBridge’s team.
               Avoid including passwords, financial details, or identity documents.
             </p>
 
