@@ -2,14 +2,14 @@
 export const MOCK_USERS = [
   {
     id: "agent-demo",
-    name: "Demo Agent",
+    name: "Kehinde Ade",
     email: "kehinde@demo.com",
     password: "demo1234",
     role: "agent",
   },
   {
     id: "user-demo",
-    name: "Demo User",
+    name: "Austin Morgan",
     email: "austin@demo.com",
     password: "demo12345",
     role: "user",

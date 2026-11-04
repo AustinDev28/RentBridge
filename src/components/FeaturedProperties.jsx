@@ -1,7 +1,10 @@
 import { useState, useEffect, useRef, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
+import { requireSignup } from "../user/requireSignup.js";
+import { getSavedPropertyIds, toggleSavedProperty } from "../user/savedProperties.js";
 import "./FeaturedProperties.css";
 
-/* Image importing section just a property image listing mockup mockup*/
+/* Property listing imagery. */
 
 // --- Modern 2 Bedroom Apartment (Lekki Phase 1) ---
 import lekki1 from "../assets/properties/lekki-1.jpg";
@@ -37,7 +40,7 @@ import banana4 from "../assets/properties/banana-4.jpg";
 
 const SAMPLE_AGENT = {
   id: "agent-demo",
-  name: "Demo Agent",
+  name: "Kehinde Ade",
   agency: "Bridge Homes Realty",
   location: "Lagos, Nigeria",
   bio: "Helping people find a place to call home. Ask me about viewings, property details, and the areas I serve.",
@@ -309,11 +312,11 @@ function PropertyCard({ property, liked, onToggleLike, onOpen, onOpenAgent, feed
       tabIndex={0}
       role="button"
       aria-label={`View ${title}${verified ? ", verified listing" : ""}`}
-      onClick={() => onOpen(property)}
+      onClick={(event) => onOpen(property, event)}
       onKeyDown={(e) => {
         if (e.target === e.currentTarget && (e.key === "Enter" || e.key === " ")) {
           e.preventDefault();
-          onOpen(property);
+          onOpen(property, e);
         }
       }}
     >
@@ -327,7 +330,7 @@ function PropertyCard({ property, liked, onToggleLike, onOpen, onOpenAgent, feed
             <ul className="feed-post-meta">
               <li>{beds} bed</li><li>{baths} bath</li><li>{sqft.toLocaleString()} sqft</li>
             </ul>
-            <button className="feed-post-details" onClick={(event) => { event.stopPropagation(); onOpen(property); }}>View property</button>
+            <button className="feed-post-details" onClick={(event) => { event.stopPropagation(); onOpen(property, event); }}>View property</button>
           </div>
         )}
         {feedMode && (
@@ -348,7 +351,7 @@ function PropertyCard({ property, liked, onToggleLike, onOpen, onOpenAgent, feed
           aria-pressed={liked}
           onClick={(e) => {
             e.stopPropagation();
-            onToggleLike(property.id);
+            onToggleLike(property.id, e);
           }}
         >
           <Heart filled={liked} />
@@ -378,8 +381,10 @@ function PropertyCard({ property, liked, onToggleLike, onOpen, onOpenAgent, feed
 
 /* ---------- Listing details modal ---------- */
 function ListingModal({ property, liked, onToggleLike, onClose }) {
+  const navigate = useNavigate();
   const { title, location, price, beds, baths, sqft, description, amenities, images, listingType, verified } = property;
-  const contactAgent = () => {
+  const contactAgent = (event) => {
+    if (!requireSignup(navigate, event)) return;
     const phone = property.agentPhone?.replace(/\D/g, "");
     if (!phone) {
       window.alert("The agent has not added a contact number for this property yet.");
@@ -455,7 +460,7 @@ function ListingModal({ property, liked, onToggleLike, onClose }) {
             >
               Contact agent
             </button>
-            <button className="btn btn--ghost" onClick={() => onToggleLike(property.id)}>
+            <button className="btn btn--ghost" onClick={(event) => onToggleLike(property.id, event)}>
               <Heart filled={liked} /> {liked ? "Saved" : "Save"}
             </button>
           </div>
@@ -505,23 +510,25 @@ const EMPTY_SEARCH = { location: "", propertyType: "", minPrice: "", maxPrice: "
  * Any field left as "" is ignored.
  */
 export default function FeaturedProperties({ properties = PROPERTIES, searchFilters, likedIds, onToggleLike, savedOnly = false, feedMode = false }) {
+  const navigate = useNavigate();
   const [selected, setSelected] = useState(null);
   const [selectedAgent, setSelectedAgent] = useState(null);
-  const [localLiked, setLocalLiked] = useState(() => new Set());
+  const [localLiked, setLocalLiked] = useState(() => new Set(getSavedPropertyIds()));
   const liked = likedIds ?? localLiked;
   const [filter, setFilter] = useState("all"); // rent / sale quick pills
 
-  const toggleLike = useCallback((id) => {
+  const toggleLike = useCallback((id, event) => {
+    if (!requireSignup(navigate, event)) return;
     if (onToggleLike) {
       onToggleLike(id);
       return;
     }
-    setLocalLiked((prev) => {
-      const next = new Set(prev);
-      next.has(id) ? next.delete(id) : next.add(id);
-      return next;
-    });
-  }, [onToggleLike]);
+    setLocalLiked(new Set(toggleSavedProperty(id)));
+  }, [navigate, onToggleLike]);
+
+  const openProperty = useCallback((property, event) => {
+    if (requireSignup(navigate, event)) setSelected(property);
+  }, [navigate]);
 
   const close = useCallback(() => setSelected(null), []);
 
@@ -601,7 +608,7 @@ export default function FeaturedProperties({ properties = PROPERTIES, searchFilt
                 property={p}
                 liked={liked.has(p.id)}
                 onToggleLike={toggleLike}
-                onOpen={setSelected}
+                onOpen={openProperty}
                 onOpenAgent={setSelectedAgent}
                 feedMode={feedMode}
               />

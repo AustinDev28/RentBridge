@@ -91,12 +91,18 @@
   color: #64748b;
   cursor: pointer;
 }
+.agent-password-toggle:hover { color: #2563eb; background: #f1f5f9; }
+.agent-password-toggle:focus-visible,.agent-login-forgot:focus-visible,.agent-login-back:focus-visible { outline: 3px solid rgba(37, 99, 235, 0.35); outline-offset: 2px; }
+.agent-login-forgot,.agent-login-back { min-height: 42px; padding: 0 4px; border: 0; background: transparent; color: #2563eb; font: inherit; font-size: .84rem; font-weight: 650; cursor: pointer; }
+.agent-login-forgot { display: block; margin: 3px 0 0 auto; }
+.agent-login-back { display: block; margin: 10px auto 0; }
 
 .agent-login-error {
   margin: 14px 0 0;
   color: #b91c1c;
   font-size: 0.9rem;
 }
+.agent-login-success { margin: 14px 0 0; color: #187044; font-size: .88rem; }
 
 .agent-login-submit {
   width: 100%;

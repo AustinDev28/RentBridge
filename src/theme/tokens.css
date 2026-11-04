@@ -1,0 +1,103 @@
+/* Theme tokens are scoped to the new shell and status roots only. Existing pages intentionally remain outside this scope. */
+:where(.shell-root[data-theme="light"], .shell-page[data-theme="light"], .status-home[data-theme="light"], .status-agent-page[data-theme="light"]) {
+  color-scheme: light;
+  --rb-page: #f4f7f6;
+  --rb-surface: #ffffff;
+  --rb-raised: #ffffff;
+  --rb-border: #d9e3df;
+  --rb-divider: #e5ece9;
+  --rb-hover-surface: #edf5f2;
+  --rb-accent-soft: #eaf4f0;
+  --rb-topbar: rgba(255,255,255,.97);
+  --rb-input-surface: #ffffff;
+  --rb-avatar-surface: #e7f2ee;
+  --rb-avatar-text: #176f65;
+  --rb-agent-text: #203740;
+  --rb-success: #187968;
+  --rb-focus-surface: rgba(8,125,112,.12);
+  --rb-overlay: rgba(10,24,30,.55);
+  --rb-mobile-shadow: rgba(24,43,53,.06);
+  --rb-avatar-border: #ffffff;
+  --rb-warning: #a93631;
+  --rb-dev-bg: #f0f8f4;
+  --rb-dev-border: #a8c9bc;
+  --rb-dev-text: #17634f;
+  --rb-text: #182b35;
+  --rb-text-secondary: #435960;
+  --rb-text-muted: #52676f;
+  --rb-accent: #087d70;
+  --rb-accent-hover: #06675d;
+  --rb-on-accent: #ffffff;
+  --rb-rent-bg: #daf5e9;
+  --rb-rent-text: #124c3a;
+  --rb-buy-bg: #ffedc8;
+  --rb-buy-text: #67480e;
+  --rb-verified-bg: #e7f3ee;
+  --rb-verified-text: #124c3a;
+  --rb-unread: #c33e38;
+  --rb-expiry-bg: #ffedc8;
+  --rb-expiry-text: #67480e;
+  --rb-ring-unseen: #20a67b;
+  --rb-ring-seen: #aab4b9;
+  --rb-focus: #087d70;
+  --rb-skeleton-base: #e5ece9;
+  --rb-skeleton-highlight: #f3f7f5;
+  --rb-shadow: 0 12px 30px rgba(20,41,50,.15);
+}
+
+:where(.shell-root[data-theme="dark"], .shell-page[data-theme="dark"], .status-home[data-theme="dark"], .status-agent-page[data-theme="dark"]) {
+  color-scheme: dark;
+  --rb-page: #101a20;
+  --rb-surface: #17242a;
+  --rb-raised: #1a292f;
+  --rb-border: #314148;
+  --rb-divider: #29383e;
+  --rb-hover-surface: #203238;
+  --rb-accent-soft: #1c3935;
+  --rb-topbar: rgba(23,36,42,.98);
+  --rb-input-surface: #17242a;
+  --rb-avatar-surface: #263c40;
+  --rb-avatar-text: #d9eee5;
+  --rb-agent-text: #edf4f1;
+  --rb-success: #8fd3c3;
+  --rb-focus-surface: rgba(114,223,179,.16);
+  --rb-overlay: rgba(4,12,17,.88);
+  --rb-mobile-shadow: rgba(0,0,0,.35);
+  --rb-avatar-border: #1a292f;
+  --rb-warning: #ff8b82;
+  --rb-dev-bg: #1c3935;
+  --rb-dev-border: #315e53;
+  --rb-dev-text: #bcebd7;
+  --rb-text: #edf4f1;
+  --rb-text-secondary: #c0cfcc;
+  --rb-text-muted: #aabbb8;
+  --rb-accent: #087d70;
+  --rb-accent-hover: #0a9483;
+  --rb-on-accent: #ffffff;
+  --rb-rent-bg: #163a34;
+  --rb-rent-text: #bcebd7;
+  --rb-buy-bg: #493a20;
+  --rb-buy-text: #ffedc8;
+  --rb-verified-bg: #1c3935;
+  --rb-verified-text: #8fd3c3;
+  --rb-unread: #ff6b62;
+  --rb-expiry-bg: #493a20;
+  --rb-expiry-text: #ffedc8;
+  --rb-ring-unseen: #4cbd84;
+  --rb-ring-seen: #718187;
+  --rb-focus: #72dfb3;
+  --rb-skeleton-base: #203238;
+  --rb-skeleton-highlight: #263c40;
+  --rb-shadow: 0 14px 34px rgba(0,0,0,.35);
+}
+
+:where(.shell-root, .shell-page, .status-home, .status-agent-page) {
+  transition: background-color .18s ease, color .18s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :where(.shell-root, .shell-page, .status-home, .status-agent-page),
+  :where(.shell-root, .shell-page, .status-home, .status-agent-page) * {
+    transition-duration: 0s !important;
+  }
+}

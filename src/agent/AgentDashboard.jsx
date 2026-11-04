@@ -1,8 +1,8 @@
 import { useMemo, useState } from "react";
 import {
   Building2, ChartNoAxesCombined, Check, ChevronDown, CircleUserRound,
-  FilePlus2, Inbox, LayoutDashboard, LogOut, Menu, Search, Settings,
-  ShieldCheck, SlidersHorizontal, Trash2, X,
+  FilePlus2, Inbox, LayoutDashboard, LogOut, Menu, Search, Settings, Megaphone,
+  ShieldCheck, SlidersHorizontal, Trash2, X, CircleDot,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import {
@@ -127,7 +127,7 @@ export default function AgentDashboard() {
       : message);
     persist("messages", updated);
     setReply("");
-    setNotice("Your reply was saved in this prototype inbox.");
+    setNotice("Your reply has been saved.");
   };
 
   const saveProfile = (event) => {
@@ -156,6 +156,8 @@ export default function AgentDashboard() {
         </div>
         <p className="agent-nav-label">WORKSPACE</p>
         <nav className="agent-side-nav" aria-label="Agent dashboard sections">
+          <button type="button" onClick={() => navigate("/agent/status")}><CircleDot size={18} /><span>Status</span></button>
+          <button type="button" onClick={() => navigate("/agent/posts")}><Megaphone size={18} /><span>Posts</span></button>
           {SECTIONS.map(({ id, label, icon: Icon }) => (
             <button key={id} type="button" className={section === id ? "is-active" : ""} onClick={() => openSection(id)}>
               <Icon size={18} /><span>{label}</span>
@@ -207,7 +209,7 @@ function sectionIntro(section) {
     add: "Share accurate details to help clients find the right property.",
     messages: "Keep client enquiries and replies together in one place.",
     profile: "Keep your agent and agency information up to date.",
-    settings: "Choose which updates you want to receive in this prototype.",
+    settings: "Choose which account updates you want to receive.",
   }[section];
 }
 
@@ -282,13 +284,13 @@ function MessagesView({ messages, activeMessage, onSelect, reply, setReply, onRe
   const selected = messages.find((message) => message.id === activeMessage);
   return <section className="agent-messages-layout agent-panel">
     <div className="agent-inbox-list"><div className="agent-inbox-title"><h2>Inbox</h2><span>{messages.length}</span></div>{messages.length ? messages.map((message) => <button type="button" key={message.id} className={`agent-inbox-item ${activeMessage === message.id ? "is-selected" : ""} ${message.unread ? "is-unread" : ""}`} onClick={() => onSelect(message)}><span className="agent-message-initial">{message.name.slice(0, 1)}</span><span className="agent-inbox-item-copy"><strong>{message.name}</strong><small>{message.listing}</small><span>{message.text}</span></span>{message.unread && <i />}</button>) : <p className="agent-muted-copy">Your client enquiries will appear here.</p>}</div>
-    <div className="agent-thread">{selected ? <><header className="agent-thread-header"><span className="agent-message-initial">{selected.name.slice(0, 1)}</span><div><strong>{selected.name}</strong><small>{selected.email} · {selected.listing}</small></div></header><div className="agent-thread-body"><article className="agent-message-bubble"><p>{selected.text}</p><small>{new Date(selected.date).toLocaleString("en-NG")}</small></article>{(selected.replies || []).map((item, index) => <article className="agent-message-bubble is-agent-reply" key={`${item.date}-${index}`}><p>{item.text}</p><small>Your reply · {new Date(item.date).toLocaleString("en-NG")}</small></article>)}</div><form className="agent-reply-form" onSubmit={onReply}><textarea value={reply} onChange={(event) => setReply(event.target.value)} placeholder="Write a reply…" rows="3" required /><div><span>Replies are saved locally in this prototype.</span><button type="submit" className="agent-primary-button">Save reply</button></div></form></> : <div className="agent-thread-empty"><Inbox size={28} /><h3>Select an enquiry</h3><p>Choose a message to view the conversation and reply.</p></div>}</div>
+    <div className="agent-thread">{selected ? <><header className="agent-thread-header"><span className="agent-message-initial">{selected.name.slice(0, 1)}</span><div><strong>{selected.name}</strong><small>{selected.email} · {selected.listing}</small></div></header><div className="agent-thread-body"><article className="agent-message-bubble"><p>{selected.text}</p><small>{new Date(selected.date).toLocaleString("en-NG")}</small></article>{(selected.replies || []).map((item, index) => <article className="agent-message-bubble is-agent-reply" key={`${item.date}-${index}`}><p>{item.text}</p><small>Your reply · {new Date(item.date).toLocaleString("en-NG")}</small></article>)}</div><form className="agent-reply-form" onSubmit={onReply}><textarea value={reply} onChange={(event) => setReply(event.target.value)} placeholder="Write a reply…" rows="3" required /><div><span>Your reply is saved with this conversation.</span><button type="submit" className="agent-primary-button">Save reply</button></div></form></> : <div className="agent-thread-empty"><Inbox size={28} /><h3>Select an enquiry</h3><p>Choose a message to view the conversation and reply.</p></div>}</div>
   </section>;
 }
 
 function ProfileView({ profile, setProfile, onSave }) {
   const change = (key, value) => setProfile((current) => ({ ...current, [key]: value }));
-  return <form className="agent-panel agent-settings-form" onSubmit={onSave}><div className="agent-profile-intro"><span className="agent-profile-large-avatar">{(profile.name || "A").slice(0, 1).toUpperCase()}</span><div><h2>Agent profile</h2><p>This information helps clients recognize and contact you.</p></div></div><div className="agent-form-grid"><label>Full name<input value={profile.name || ""} onChange={(event) => change("name", event.target.value)} required /></label><label>Email address<input type="email" value={profile.email || ""} disabled /><span className="agent-field-hint">Email changes can be managed after backend authentication is connected.</span></label><label>Phone number<input type="tel" value={profile.phone || ""} onChange={(event) => change("phone", event.target.value)} placeholder="+234 800 000 0000" /></label><label>Agency name<input value={profile.agency || ""} onChange={(event) => change("agency", event.target.value)} placeholder="Your agency or business" /></label><label className="agent-form-wide">Business location<input value={profile.location || ""} onChange={(event) => change("location", event.target.value)} placeholder="City, state" /></label><label className="agent-form-wide">About you<textarea rows="4" value={profile.bio || ""} onChange={(event) => change("bio", event.target.value)} placeholder="A short introduction for prospective clients." /></label></div><div className="agent-form-actions"><button type="submit" className="agent-primary-button">Save profile</button></div></form>;
+  return <form className="agent-panel agent-settings-form" onSubmit={onSave}><div className="agent-profile-intro"><span className="agent-profile-large-avatar">{(profile.name || "A").slice(0, 1).toUpperCase()}</span><div><h2>Agent profile</h2><p>This information helps clients recognize and contact you.</p></div></div><div className="agent-form-grid"><label>Full name<input value={profile.name || ""} onChange={(event) => change("name", event.target.value)} required /></label><label>Email address<input type="email" value={profile.email || ""} disabled /><span className="agent-field-hint">Email address cannot be changed here.</span></label><label>Phone number<input type="tel" value={profile.phone || ""} onChange={(event) => change("phone", event.target.value)} placeholder="+234 800 000 0000" /></label><label>Agency name<input value={profile.agency || ""} onChange={(event) => change("agency", event.target.value)} placeholder="Your agency or business" /></label><label className="agent-form-wide">Business location<input value={profile.location || ""} onChange={(event) => change("location", event.target.value)} placeholder="City, state" /></label><label className="agent-form-wide">About you<textarea rows="4" value={profile.bio || ""} onChange={(event) => change("bio", event.target.value)} placeholder="A short introduction for prospective clients." /></label></div><div className="agent-form-actions"><button type="submit" className="agent-primary-button">Save profile</button></div></form>;
 }
 
 function SettingsView({ settings, onChange }) {
@@ -297,7 +299,7 @@ function SettingsView({ settings, onChange }) {
     ["messageNotifications", "New message alerts", "Get notified when a prospective client sends an enquiry."],
     ["listingUpdates", "Listing status updates", "Receive updates when a listing is reviewed or changes status."],
   ];
-  return <section className="agent-panel agent-settings-form"><div className="agent-panel-heading"><div><h2>Notifications</h2><p>Manage the updates you receive about your account.</p></div></div><div className="agent-settings-options">{options.map(([key, label, detail]) => <label className="agent-setting-row" key={key}><span><strong>{label}</strong><small>{detail}</small></span><input type="checkbox" checked={Boolean(settings[key])} onChange={(event) => onChange(key, event.target.checked)} /></label>)}</div><div className="agent-review-note"><ShieldCheck size={19} /><span><strong>Account security</strong><small>Your prototype session is stored in this browser. Connect a secure backend before using real accounts or private information.</small></span></div></section>;
+  return <section className="agent-panel agent-settings-form"><div className="agent-panel-heading"><div><h2>Notifications</h2><p>Manage the updates you receive about your account.</p></div></div><div className="agent-settings-options">{options.map(([key, label, detail]) => <label className="agent-setting-row" key={key}><span><strong>{label}</strong><small>{detail}</small></span><input type="checkbox" checked={Boolean(settings[key])} onChange={(event) => onChange(key, event.target.checked)} /></label>)}</div><div className="agent-review-note"><ShieldCheck size={19} /><span><strong>Account security</strong><small>Sign out when you finish using a shared device.</small></span></div></section>;
 }
 
 function EmptyState({ title, detail, action, onAction }) {

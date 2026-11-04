@@ -5,17 +5,19 @@ import { DEMO_WORKSPACE } from "./mockWorkspace.js";
 const SESSION_KEY = "rentbridge-agent-session";
 const REGISTERED_AGENTS_KEY = "rentbridge-registered-agents";
 const WORKSPACE_KEY = "rentbridge-agent-workspaces";
+const PASSWORD_OVERRIDES_KEY = "rentbridge-agent-password-overrides";
 
 const delay = (milliseconds) =>
   new Promise((resolve) => window.setTimeout(resolve, milliseconds));
 
 export async function login(email, password) {
   await delay(500);
+  const passwordOverrides = readPasswordOverrides();
 
   const user = [...MOCK_USERS, ...getRegisteredAgents()].find(
     (entry) =>
       entry.email.toLowerCase() === email.trim().toLowerCase() &&
-      entry.password === password,
+      (passwordOverrides[entry.id] || entry.password) === password,
   );
 
   if (!user) {
@@ -29,6 +31,33 @@ export async function login(email, password) {
   const agent = { id: user.id, name: user.name, email: user.email, role: user.role };
   window.localStorage.setItem(SESSION_KEY, JSON.stringify(agent));
   return { agent };
+}
+
+export async function resetAgentPassword(email, newPassword) {
+  await delay(300);
+  const normalizedEmail = String(email || "").trim().toLowerCase();
+  if (typeof newPassword !== "string" || newPassword.length < 8) return { error: "password_too_short" };
+  const agent = [...MOCK_USERS, ...getRegisteredAgents()].find(
+    (entry) => entry.role === "agent" && entry.email.toLowerCase() === normalizedEmail,
+  );
+  if (!agent) return { error: "account_not_found" };
+  const overrides = readPasswordOverrides();
+  overrides[agent.id] = newPassword;
+  try {
+    window.localStorage.setItem(PASSWORD_OVERRIDES_KEY, JSON.stringify(overrides));
+  } catch {
+    return { error: "storage_unavailable" };
+  }
+  return { success: true };
+}
+
+function readPasswordOverrides() {
+  try {
+    const overrides = JSON.parse(window.localStorage.getItem(PASSWORD_OVERRIDES_KEY) || "{}");
+    return overrides && typeof overrides === "object" && !Array.isArray(overrides) ? overrides : {};
+  } catch {
+    return {};
+  }
 }
 
 export async function registerAgent({ name, email, password }) {

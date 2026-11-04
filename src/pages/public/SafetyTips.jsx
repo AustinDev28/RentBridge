@@ -38,7 +38,7 @@ export default function SafetyTips() {
     });
 
     setReportOpen(false);
-    setReportNotice("Your report has been saved in this browser.");
+    setReportNotice("Your report details have been recorded.");
     event.currentTarget.reset();
   };
 
@@ -144,8 +144,8 @@ export default function SafetyTips() {
           <form className="listing-report-form" onSubmit={submitReport}>
             <h3>Report a property listing</h3>
             <p className="listing-report-form__note">
-              Reports are not saved in this browser they would be sent to RentBridge’s team.
-              Avoid including passwords, financial details, or identity documents.
+              Share only details relevant to this listing. Do not include passwords,
+              financial details, or identity documents.
             </p>
 
             <label htmlFor="report-listing">Select the listing</label>

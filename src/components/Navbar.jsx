@@ -2,7 +2,7 @@ import "./Navbar.css";
 import logo from "../assets/logo.jpg"
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Home, Building2, Users, Info, ShieldCheck } from "lucide-react";
+import { Home, Building2, Users, Info, ShieldCheck, CircleUserRound } from "lucide-react";
 
 export default function Navbar() {
     const [isOpen, setIsOpen] = useState(false);
@@ -13,21 +13,24 @@ export default function Navbar() {
             </div>
             
         <div className="navbar-links">
-            <a href="./">
-              <Home size="{12}" /> Home
-               </a>
-               <a href="./properties">
-              <Building2 size="{12}" /> Properties
-               </a>
-               <a href="./about">
-              <Info size="{12}" /> About
-               </a>
-               <a href="./safetytips">
-              <ShieldCheck size="{16}" /> Safety-Tips
-               </a>
-               <a href="/agent/login">
-                 <Users size="{12}" /> Agents-Login
-               </a>
+            <Link to="/">
+              <Home size={12} /> Home
+            </Link>
+               <Link to="/properties">
+              <Building2 size={12} /> Properties
+               </Link>
+               <Link to="/about">
+              <Info size={12} /> About
+               </Link>
+               <Link to="/safetytips">
+              <ShieldCheck size={16} /> Safety-Tips
+               </Link>
+               <Link to="/agent/login">
+                 <Users size={12} /> Agents-Login
+               </Link>
+               <Link to="/account">
+                 <CircleUserRound size={14} /> Account
+               </Link>
              </div>
          {/* Hamburger button - mobile only */}
       <button
@@ -48,6 +51,7 @@ export default function Navbar() {
           <li><Link to="/about" onClick={() => setIsOpen(false)}>About</Link></li>
           <li><Link to="/safetytips" onClick={() => setIsOpen(false)}>Safety-Tips</Link></li>
           <li><Link to="/agent/login" onClick={() => setIsOpen(false)}>Agents-Login</Link></li>
+          <li><Link to="/account" onClick={() => setIsOpen(false)}>Account</Link></li>
         </ul>
       )}
         </section>

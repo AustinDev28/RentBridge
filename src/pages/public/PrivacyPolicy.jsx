@@ -1,6 +1,6 @@
 import "./LegalPages.css";
 
-const UPDATED = "October 26, 2026";
+const UPDATED = "November 3, 2026";
 
 export default function PrivacyPolicy() {
   return (
@@ -9,52 +9,48 @@ export default function PrivacyPolicy() {
         <p className="legal-page__eyebrow">RentBridge · Privacy</p>
         <h1>Privacy Policy</h1>
         <p className="legal-page__intro">
-          This page explains what information the current RentBridge website uses,
-          where the prototype keeps it, and what happens when you contact an agent.
+          This notice explains what information you may provide through RentBridge,
+          how it is used, and what choices are available to you.
         </p>
         <p className="legal-page__updated">Last updated: {UPDATED}</p>
 
         <aside className="legal-page__notice">
-          <strong>Prototype notice:</strong> Agent accounts, profile details, and listings
-          are currently saved in the browser you use. They are not connected to a shared
-          RentBridge server, so they may not appear on another device and can be removed
-          when browser data is cleared. Do not enter passwords or sensitive personal
-          information that you would not want stored on that device.
+          Account details, preferences, and listing information are stored in the
+          browser where you use RentBridge and are not synced across devices. Anyone
+          with access to that browser profile may be able to view its saved data. Avoid
+          using a password you use elsewhere, and do not enter confidential information.
         </aside>
 
         <section className="legal-page__section">
           <h2>Information you provide</h2>
           <p>
-            If you create or use an agent account in this prototype, you may enter your
-            name, email address, password, phone number, agency details, profile text,
-            property information, and client messages. Information you enter into a
-            contact link or message is handled by the service you choose to use.
+            When you use an account, you may provide your name, email address, password,
+            phone number, agency details, profile text, property information, and client
+            messages. Information you share through a contact link or message is handled
+            by the service you choose to use.
           </p>
         </section>
 
         <section className="legal-page__section">
-          <h2>How the prototype stores information</h2>
+          <h2>How information is stored</h2>
           <p>
-            The agent prototype uses your browser’s local storage for the session,
-            account, profile, listing, settings, and message data. Anyone with access
-            to that browser profile may be able to see or change this data. Clearing
-            the browser’s site data removes it. This storage is not a secure account
-            system and should not be used for real passwords or confidential client
-            information.
+            RentBridge saves account, profile, listing, settings, and message information
+            in your browser. Your sign-in session is kept for the current browser session.
+            Clearing RentBridge site data removes saved information and signs you out.
+            Use a private device and sign out when you finish on a shared device.
           </p>
           <p>
-            The public sample property cards are built into the website. In the current
-            prototype they are separate from agent dashboard submissions.
+            Public property information displayed on the site may be provided separately
+            from information entered in an agent account.
           </p>
         </section>
 
         <section className="legal-page__section">
           <h2>How information is used</h2>
           <p>
-            Information entered in the prototype supports its visible features, such as
-            signing in, showing an agent profile, managing sample listings, and displaying
-            messages in the dashboard. RentBridge currentlyhave a connected
-            backend through which this prototype data is shared between users.
+            RentBridge uses information to manage your account, display agent profiles
+            and properties, save your preferences, support status updates, and show
+            account messages. Information you enter is not synced to other devices.
           </p>
         </section>
 
@@ -72,25 +68,19 @@ export default function PrivacyPolicy() {
         <section className="legal-page__section">
           <h2>Your choices</h2>
           <ul>
-            <li>You can choose not to create an agent account or submit optional profile details.</li>
-            <li>You can update information in the dashboard where editing is available.</li>
-            <li>You can remove prototype data by clearing RentBridge site data in your browser. This also signs you out and cannot be undone.</li>
-            <li>For privacy questions or a request about information held by RentBridge, contact the RentBridge team through its official contact channel when one is provided.</li>
+            <li>You can choose which optional profile details to provide.</li>
+            <li>You can update your name, notification preferences, and saved items in Account settings.</li>
+            <li>You can clear RentBridge site data in your browser to remove saved information and sign out. This cannot be undone.</li>
+            <li>For privacy questions, contact the RentBridge team through its official contact channel.</li>
           </ul>
         </section>
 
         <section className="legal-page__section">
           <h2>Changes and applicable protections</h2>
           <p>
-            We may update this notice as the service changes. If a shared account system,
-            analytics, or other data processing is introduced, this page should be updated
-            before that change is used with real users. RentBridge aims to handle personal
+            We may update this notice as RentBridge changes. We aim to handle personal
             information responsibly and to respect privacy rights that apply to you,
             including rights under applicable Nigerian data protection law.
-          </p>
-          <p>
-            This notice describes the current prototype and is not a substitute for a
-            legal review before the service is launched for production use.
           </p>
         </section>
       </article>

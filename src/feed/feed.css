@@ -1,0 +1,95 @@
+.rb-feed-section { margin: 0 0 30px; padding-bottom: 26px; border-bottom: 1px solid #edf0f2; }
+.rb-feed-title h2,.rb-stories-heading h2 { margin: 0; font-size: 1.15rem; letter-spacing: -.02em; }
+.rb-feed-title p:not(.rb-eyebrow) { margin: 5px 0 0; color: #71808d; font-size: .82rem; }
+.rb-eyebrow { margin: 0 0 6px; color: #167d72; font-size: .67rem; font-weight: 750; letter-spacing: .1em; text-transform: uppercase; }
+.rb-filter-chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 16px 0; }
+.rb-filter-chips button,.rb-tabs button { padding: 8px 14px; border: 1px solid #e1e7e9; border-radius: 999px; background: #fff; color: #52626e; font: inherit; font-size: .78rem; cursor: pointer; }
+.rb-filter-chips button.is-active,.rb-tabs button.is-active { border-color: #167d72; background: #167d72; color: #fff; }
+.rb-post-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 14px; align-items: start; }
+.rb-post-card { min-width: 0; overflow: hidden; border: 1px solid #e6ecee; border-radius: 15px; background: #fff; box-shadow: 0 3px 14px rgba(23,43,58,.045); }
+.rb-post-head { display: flex; min-height: 58px; align-items: center; gap: 8px; padding: 9px 10px; }
+.rb-avatar { display: grid; width: 33px; height: 33px; flex: 0 0 auto; place-items: center; overflow: hidden; border-radius: 50%; background: #e7f1ed; color: #167d72; font-size: .82rem; font-weight: 750; }
+.rb-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.rb-agent-copy { display: grid; min-width: 0; flex: 1; }
+.rb-agent-copy strong { overflow: hidden; font-size: .76rem; text-overflow: ellipsis; white-space: nowrap; }
+.rb-agent-copy small { margin-top: 2px; overflow: hidden; color: #84919a; font-size: .65rem; text-overflow: ellipsis; white-space: nowrap; }
+.rb-verified { display: inline-flex; align-items: center; gap: 3px; color: #198351; font-size: .61rem; font-weight: 700; white-space: nowrap; }
+.rb-follow-button { padding: 5px 8px; border: 0; border-radius: 7px; background: #edf7f3; color: #176f65; font: inherit; font-size: .64rem; font-weight: 700; cursor: pointer; }
+.rb-expiry { padding: 5px 7px; border-radius: 7px; background: #f2f5f5; color: #61717a; font-size: .59rem; white-space: nowrap; }
+.rb-expiry.is-urgent { background: #fff0ed; color: #c43f32; }
+.rb-post-image-wrap { position: relative; aspect-ratio: 4/3; background: #e9eeef; }
+.rb-post-image { display: block; width: 100%; height: 100%; object-fit: cover; }
+.rb-type { position: absolute; top: 10px; left: 10px; padding: 5px 9px; border-radius: 999px; background: #fff; color: #176f65; font-size: .65rem; font-weight: 750; }
+.rb-type-buy { color: #8a5c0b; }
+.rb-post-body { padding: 11px 12px 12px; }
+.rb-caption { min-height: 2.4em; margin: 0; color: #394b55; font-size: .79rem; line-height: 1.45; }
+.rb-post-price { margin: 9px 0 0; color: #172b3a; font-size: .91rem; font-weight: 800; }
+.rb-post-price span { color: #71808d; font-size: .7rem; font-weight: 450; }
+.rb-post-location { margin: 3px 0 9px; color: #71808d; font-size: .72rem; }
+.rb-post-actions { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-top: 1px solid #edf0f2; }
+.rb-post-actions button { display: inline-flex; align-items: center; gap: 4px; padding: 3px; border: 0; background: transparent; color: #596b74; font: inherit; font-size: .68rem; cursor: pointer; }
+.rb-post-actions button[aria-pressed="true"] { color: #cf4b55; }
+.rb-view-count { display: inline-flex; align-items: center; gap: 4px; margin-left: auto; color: #84919a; font-size: .68rem; }
+.rb-post-footer { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.rb-property-cta { display: inline-flex; min-height: 34px; align-items: center; justify-content: center; padding: 0 14px; border-radius: 8px; background: #167d72; color: #fff; font-size: .72rem; font-weight: 700; text-decoration: none; }
+.rb-property-cta:hover { background: #12675e; }
+.rb-report-label { display: inline-flex; align-items: center; gap: 3px; color: #829098; font-size: .68rem; }
+.rb-report-label select { width: 58px; border: 0; background: transparent; color: inherit; font: inherit; cursor: pointer; }
+.rb-empty { padding: 24px 12px; color: #71808d; font-size: .84rem; text-align: center; }
+.rb-load-more { display: block; margin: 16px auto 0; padding: 9px 17px; border: 1px solid #dfe7e8; border-radius: 9px; background: #fff; color: #176f65; font: inherit; font-size: .78rem; font-weight: 700; cursor: pointer; }
+.rb-skeleton { min-height: 365px; border-radius: 14px; background: linear-gradient(100deg,#edf1f2 30%,#f9fbfb 48%,#edf1f2 66%); background-size: 220% 100%; animation: rb-shimmer 1.2s infinite; }
+@keyframes rb-shimmer { to { background-position-x: -220%; } }
+.rb-stories { margin: 0 0 24px; }
+.rb-stories-heading { display: flex; align-items: center; gap: 9px; margin: 0 0 10px; }
+.rb-stories-heading span { padding: 4px 7px; border-radius: 999px; background: #edf7f3; color: #267668; font-size: .62rem; }
+.rb-stories-row { display: flex; gap: 12px; overflow-x: auto; padding: 2px 1px 6px; }
+.rb-story { display: grid; flex: 0 0 60px; justify-items: center; gap: 4px; padding: 0; border: 0; background: transparent; color: #53636c; font: inherit; font-size: .64rem; cursor: pointer; }
+.rb-story-ring { display: block; width: 52px; height: 52px; padding: 3px; border-radius: 50%; background: linear-gradient(135deg,#20a37b,#e3af57); }
+.rb-story-ring img { width: 100%; height: 100%; border: 2px solid #fff; border-radius: 50%; object-fit: cover; }
+.rb-story-modal { position: fixed; z-index: 1200; inset: 0; display: grid; place-items: center; padding: 20px; background: rgba(10,20,27,.64); }
+.rb-story-modal article { position: relative; width: min(430px,100%); overflow: hidden; border-radius: 18px; background: #fff; }
+.rb-story-modal article>button { position: absolute; z-index: 2; top: 8px; right: 10px; width: 34px; height: 34px; border: 0; border-radius: 50%; background: rgba(0,0,0,.5); color: white; font-size: 1.4rem; cursor: pointer; }
+.rb-story-modal article>img { display: block; width: 100%; max-height: 62vh; object-fit: cover; }
+.rb-story-modal article>div { padding: 15px; }
+.rb-story-modal p { margin: 7px 0; color: #50616a; }
+.rb-submit { display: inline-flex; align-items: center; justify-content: center; gap: 7px; min-height: 37px; padding: 0 14px; border: 0; border-radius: 8px; background: #167d72; color: #fff; font: inherit; font-size: .77rem; font-weight: 700; cursor: pointer; }
+.rb-agent-workspace { min-height: 100vh; }
+.rb-agent-workspace .agent-side-nav a { display: flex; min-height: 43px; align-items: center; gap: 12px; padding: 0 11px; border-radius: 8px; color: #536176; font-size: .86rem; text-decoration: none; }
+.rb-agent-workspace .agent-side-nav a:hover { background: #f5f7fb; }
+.rb-agent-workspace .agent-side-nav a.is-active { background: #edf3ff; color: #2563eb; font-weight: 700; }
+.rb-agent-heading { margin-bottom: 22px; }
+.rb-agent-heading h1 { margin: 0; font-size: clamp(1.45rem,2vw,1.85rem); }
+.rb-agent-heading p:last-child { margin: 8px 0 0; color: #718096; font-size: .88rem; }
+.rb-agent-panel { margin-bottom: 18px; padding: 19px; border: 1px solid #e6eaf0; border-radius: 12px; background: #fff; box-shadow: 0 2px 8px rgba(25,42,70,.025); }
+.rb-panel-heading h2 { margin: 0; font-size: 1rem; }
+.rb-panel-heading p:last-child { margin: 5px 0 0; color: #718096; font-size: .77rem; }
+.rb-create-form { display: grid; max-width: 660px; gap: 13px; margin-top: 18px; }
+.rb-create-form>label { display: grid; gap: 6px; color: #3f4f5e; font-size: .77rem; font-weight: 650; }
+.rb-create-form input:not([type=checkbox]),.rb-create-form select,.rb-create-form textarea { width: 100%; min-height: 40px; padding: 9px 11px; border: 1px solid #dfe5ec; border-radius: 8px; background: white; color: #39465a; font: inherit; font-size: .78rem; }
+.rb-create-form textarea { min-height: 82px; resize: vertical; }
+.rb-create-form small { color: #8a96a8; font-size: .68rem; font-weight: 400; }
+.rb-check-row { display: flex!important; align-items: center; gap: 8px!important; }
+.rb-check-row input { accent-color: #167d72; }
+.rb-form-error,.rb-form-success { color: #b64036; font-size: .78rem; }
+.rb-form-success { color: #187344; }
+.rb-submit { width: fit-content; }
+.rb-submit:disabled { opacity: .65; cursor: wait; }
+.rb-preview { max-width: 420px; margin-top: 22px; }
+.rb-preview h3 { margin: 0 0 9px; font-size: .84rem; }
+.rb-tabs { display: flex; gap: 8px; margin-bottom: 15px; }
+.rb-my-posts { display: grid; }
+.rb-my-post { display: flex; align-items: center; gap: 14px; padding: 13px 0; border-top: 1px solid #edf0f2; }
+.rb-my-post>img { width: 96px; height: 76px; flex: 0 0 auto; border-radius: 9px; object-fit: cover; }
+.rb-my-post-copy { min-width: 0; flex: 1; }
+.rb-my-post-copy>strong { display: block; overflow: hidden; font-size: .8rem; text-overflow: ellipsis; white-space: nowrap; }
+.rb-my-post-copy>p { overflow: hidden; margin: 4px 0; color: #647680; font-size: .73rem; text-overflow: ellipsis; white-space: nowrap; }
+.rb-my-post-copy>small { color: #7d8992; font-size: .68rem; }
+.rb-stats { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 8px; color: #71808d; font-size: .68rem; }
+.rb-stats span { display: inline-flex; align-items: center; gap: 4px; }
+.rb-my-actions button { display: inline-flex; align-items: center; gap: 5px; min-height: 33px; padding: 0 9px; border: 1px solid #e1e7e9; border-radius: 7px; background: white; color: #596b74; font: inherit; font-size: .68rem; cursor: pointer; }
+.rb-my-actions button:hover { color: #167d72; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; }
+.rb-feed-section button:focus-visible,.rb-create-form :focus-visible { outline: 3px solid rgba(22,125,114,.35); outline-offset: 2px; }
+@media (max-width: 900px) { .rb-post-grid { grid-template-columns: repeat(2,minmax(0,1fr)); } }
+@media (max-width: 600px) { .rb-post-grid { grid-template-columns: 1fr; }.rb-post-card { max-width: 440px; width: 100%; margin-inline: auto; }.rb-post-image-wrap { aspect-ratio: 4/3; }.rb-my-post { align-items: flex-start; gap: 9px; }.rb-my-post>img { width: 66px; height: 62px; }.rb-stats { gap: 6px; }.rb-my-actions button { padding: 0 6px; font-size: .62rem; }.rb-agent-workspace .agent-sidebar { display: none; }.rb-agent-workspace .agent-topbar { padding: 0 15px; } }
+@media (prefers-reduced-motion: reduce) { .rb-feed-section *, .rb-story-modal { scroll-behavior: auto!important; animation: none!important; transition: none!important; }.rb-skeleton { background: #edf1f2; } }

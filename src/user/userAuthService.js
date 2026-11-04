@@ -3,6 +3,8 @@ import { MOCK_USERS } from "../agent/mockUsers.js";
 
 const ACCOUNTS_KEY = "rentbridge-registered-users";
 const SESSION_KEY = "rentbridge-user-session";
+const PASSWORD_OVERRIDES_KEY = "rentbridge-user-password-overrides";
+const PROFILE_OVERRIDES_KEY = "rentbridge-user-profile-overrides";
 
 function readAccounts() {
   try {
@@ -13,10 +15,24 @@ function readAccounts() {
   }
 }
 
+function readOverrides(key) {
+  try {
+    const value = JSON.parse(window.localStorage.getItem(key) || "{}");
+    return value && typeof value === "object" && !Array.isArray(value) ? value : {};
+  } catch {
+    return {};
+  }
+}
+
+function findUserAccount(userId) {
+  return [...MOCK_USERS, ...readAccounts()].find((account) => account.id === userId && account.role === "user");
+}
+
 export function getCurrentUser() {
   try {
     const value = JSON.parse(window.sessionStorage.getItem(SESSION_KEY) || "null");
-    return value?.role === "user" ? value : null;
+    if (value?.role !== "user") return null;
+    return { ...value, ...readOverrides(PROFILE_OVERRIDES_KEY)[value.id], role: "user" };
   } catch {
     logoutUser();
     return null;
@@ -25,9 +41,12 @@ export function getCurrentUser() {
 
 export function loginUser(email, password) {
   const normalizedEmail = email.trim().toLowerCase();
-  const user = [...MOCK_USERS, ...readAccounts()].find((account) =>
-    account.role === "user" && account.email.toLowerCase() === normalizedEmail && account.password === password,
+  const passwordOverrides = readOverrides(PASSWORD_OVERRIDES_KEY);
+  const profileOverrides = readOverrides(PROFILE_OVERRIDES_KEY);
+  const account = [...MOCK_USERS, ...readAccounts()].find((item) =>
+    item.role === "user" && item.email.toLowerCase() === normalizedEmail && (passwordOverrides[item.id] || item.password) === password,
   );
+  const user = account && { ...account, ...profileOverrides[account.id] };
   if (!user) return { error: "invalid_credentials" };
   const session = { id: user.id, name: user.name, email: user.email, role: "user" };
   window.sessionStorage.setItem(SESSION_KEY, JSON.stringify(session));
@@ -48,4 +67,56 @@ export function registerUser({ name, email, password }) {
 
 export function logoutUser() {
   window.sessionStorage.removeItem(SESSION_KEY);
+}
+
+// Frontend prototype only: a real backend must hash passwords and verify all profile changes server-side.
+export function updateUserProfile({ name }) {
+  const session = getCurrentUser();
+  const cleanName = String(name || "").trim();
+  if (!session) return { error: "not_signed_in" };
+  if (cleanName.length < 2 || cleanName.length > 80) return { error: "invalid_name" };
+
+  const overrides = readOverrides(PROFILE_OVERRIDES_KEY);
+  overrides[session.id] = { ...overrides[session.id], name: cleanName };
+  try {
+    window.localStorage.setItem(PROFILE_OVERRIDES_KEY, JSON.stringify(overrides));
+  } catch {
+    return { error: "storage_unavailable" };
+  }
+  const updated = { ...session, name: cleanName };
+  window.sessionStorage.setItem(SESSION_KEY, JSON.stringify(updated));
+  return { user: updated };
+}
+
+export function changeUserPassword({ currentPassword, newPassword }) {
+  const session = getCurrentUser();
+  if (!session) return { error: "not_signed_in" };
+  if (typeof newPassword !== "string" || newPassword.length < 8) return { error: "password_too_short" };
+  if (currentPassword === newPassword) return { error: "password_unchanged" };
+  const account = findUserAccount(session.id);
+  const overrides = readOverrides(PASSWORD_OVERRIDES_KEY);
+  const expectedPassword = overrides[session.id] || account?.password;
+  if (!expectedPassword || expectedPassword !== currentPassword) return { error: "incorrect_current_password" };
+  overrides[session.id] = newPassword;
+  try {
+    window.localStorage.setItem(PASSWORD_OVERRIDES_KEY, JSON.stringify(overrides));
+  } catch {
+    return { error: "storage_unavailable" };
+  }
+  return { success: true };
+}
+
+export function resetUserPassword({ email, newPassword }) {
+  const normalizedEmail = String(email || "").trim().toLowerCase();
+  if (typeof newPassword !== "string" || newPassword.length < 8) return { error: "password_too_short" };
+  const account = [...MOCK_USERS, ...readAccounts()].find((item) => item.role === "user" && item.email.toLowerCase() === normalizedEmail);
+  if (!account) return { error: "account_not_found" };
+  const overrides = readOverrides(PASSWORD_OVERRIDES_KEY);
+  overrides[account.id] = newPassword;
+  try {
+    window.localStorage.setItem(PASSWORD_OVERRIDES_KEY, JSON.stringify(overrides));
+  } catch {
+    return { error: "storage_unavailable" };
+  }
+  return { success: true };
 }
