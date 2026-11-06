@@ -1,0 +1,268 @@
+/* The appearance choice intentionally covers legacy pages, agent pages, and the footer too. */
+html[data-theme="light"] body {
+  background: var(--rb-page);
+  color: var(--rb-text);
+}
+
+html[data-theme="dark"] body {
+  background: var(--rb-page);
+  color: var(--rb-text);
+}
+
+html[data-theme] :focus-visible {
+  outline: 3px solid var(--rb-focus);
+  outline-offset: 2px;
+}
+
+/* Property search and listing results */
+html[data-theme="dark"] .rb-page,
+html[data-theme="dark"] .featured {
+  --bg: var(--rb-page);
+  --ink: var(--rb-text);
+  --slate: var(--rb-text-secondary);
+  --muted: var(--rb-text-muted);
+  --line: var(--rb-border);
+  --fp-primary: #58c9b3;
+  --fp-primary-dark: #76dbc7;
+  --fp-text: var(--rb-text);
+  --fp-muted: var(--rb-text-secondary);
+  --fp-border: var(--rb-border);
+  --fp-bg: var(--rb-page);
+}
+
+html[data-theme="dark"] .rb-page,
+html[data-theme="dark"] .rb-header,
+html[data-theme="dark"] .rb-search-bar,
+html[data-theme="dark"] .rb-filters,
+html[data-theme="dark"] .rb-card,
+html[data-theme="dark"] .rb-sort-select,
+html[data-theme="dark"] .rb-filter-toggle,
+html[data-theme="dark"] .rb-field input,
+html[data-theme="dark"] .rb-field select,
+html[data-theme="dark"] .rb-range-row select,
+html[data-theme="dark"] .featured__searchsummary,
+html[data-theme="dark"] .filter-btn,
+html[data-theme="dark"] .card,
+html[data-theme="dark"] .slider__thumbs,
+html[data-theme="dark"] .modal__dialog,
+html[data-theme="dark"] .btn--ghost {
+  background-color: var(--rb-surface);
+  color: var(--rb-text);
+  border-color: var(--rb-border);
+}
+
+html[data-theme="dark"] .rb-page,
+html[data-theme="dark"] .featured,
+html[data-theme="dark"] .modal__dialog {
+  background: var(--rb-page);
+  color: var(--rb-text);
+}
+
+html[data-theme="dark"] .rb-brand,
+html[data-theme="dark"] .rb-nav a.active,
+html[data-theme="dark"] .rb-search-btn,
+html[data-theme="dark"] .rb-clear-link,
+html[data-theme="dark"] .rb-price,
+html[data-theme="dark"] .featured__viewall,
+html[data-theme="dark"] .card__location,
+html[data-theme="dark"] .btn--primary {
+  color: var(--rb-on-accent);
+}
+
+html[data-theme="dark"] .rb-search-btn,
+html[data-theme="dark"] .btn--primary,
+html[data-theme="dark"] .filter-btn.is-active {
+  background: #087d70;
+  border-color: #087d70;
+}
+
+html[data-theme="dark"] .rb-nav,
+html[data-theme="dark"] .rb-field label,
+html[data-theme="dark"] .rb-checkbox-row,
+html[data-theme="dark"] .rb-sort-select,
+html[data-theme="dark"] .rb-filter-toggle,
+html[data-theme="dark"] .rb-card-meta,
+html[data-theme="dark"] .card__meta,
+html[data-theme="dark"] .modal__text,
+html[data-theme="dark"] .featured__header p,
+html[data-theme="dark"] .rb-subtitle,
+html[data-theme="dark"] .rb-location,
+html[data-theme="dark"] .rb-price span,
+html[data-theme="dark"] .card__price span,
+html[data-theme="dark"] .modal__price span {
+  color: var(--rb-text-secondary);
+}
+
+html[data-theme="dark"] .chips li,
+html[data-theme="dark"] .featured__searchsummary {
+  background: var(--rb-hover-surface);
+  color: var(--rb-text);
+}
+
+/* Legacy navigation and footer, whenever those components are rendered */
+html[data-theme="dark"] .navbar,
+html[data-theme="dark"] .mobile-menu,
+html[data-theme="dark"] .footer {
+  background: var(--rb-surface);
+  color: var(--rb-text);
+  border-color: var(--rb-border);
+}
+
+html[data-theme="dark"] .navbar a,
+html[data-theme="dark"] .footer a,
+html[data-theme="dark"] .footer p,
+html[data-theme="dark"] .footer small,
+html[data-theme="dark"] .footer h2,
+html[data-theme="dark"] .footer h3,
+html[data-theme="dark"] .footer-legal,
+html[data-theme="dark"] .footer-bottom {
+  color: var(--rb-text-secondary);
+}
+
+html[data-theme="dark"] .navbar .hamburger span,
+html[data-theme="dark"] .agent-mobile-menu {
+  color: #ffffff;
+  background-color: #ffffff;
+}
+
+html[data-theme="dark"] .agent-mobile-menu {
+  background: transparent;
+}
+
+/* Public informational and account-access pages */
+html[data-theme="dark"] .about,
+html[data-theme="dark"] .legal-page,
+html[data-theme="dark"] .safety-page,
+html[data-theme="dark"] .user-auth-page,
+html[data-theme="dark"] .agent-login-page {
+  background: var(--rb-page);
+  color: var(--rb-text);
+}
+
+html[data-theme="dark"] .about h1,
+html[data-theme="dark"] .about h2,
+html[data-theme="dark"] .about h3,
+html[data-theme="dark"] .legal-page h1,
+html[data-theme="dark"] .legal-page h2,
+html[data-theme="dark"] .safety-page h1,
+html[data-theme="dark"] .safety-page h2,
+html[data-theme="dark"] .user-auth-page h1,
+html[data-theme="dark"] .agent-login-page h1 {
+  color: var(--rb-text);
+}
+
+html[data-theme="dark"] .value-card,
+html[data-theme="dark"] .legal-page__notice,
+html[data-theme="dark"] .legal-page__section,
+html[data-theme="dark"] .safety-card,
+html[data-theme="dark"] .report-section,
+html[data-theme="dark"] .listing-report-form,
+html[data-theme="dark"] .user-auth-card,
+html[data-theme="dark"] .agent-login-card {
+  background: var(--rb-surface);
+  color: var(--rb-text);
+  border-color: var(--rb-border);
+}
+
+html[data-theme="dark"] .about p,
+html[data-theme="dark"] .legal-page p,
+html[data-theme="dark"] .legal-page li,
+html[data-theme="dark"] .safety-page p,
+html[data-theme="dark"] .listing-report-form label,
+html[data-theme="dark"] .listing-report-form__note {
+  color: var(--rb-text-secondary);
+}
+
+html[data-theme="dark"] .user-auth-card input,
+html[data-theme="dark"] .agent-login-card input,
+html[data-theme="dark"] .listing-report-form input,
+html[data-theme="dark"] .listing-report-form select,
+html[data-theme="dark"] .listing-report-form textarea {
+  background: var(--rb-input-surface);
+  color: var(--rb-text);
+  border-color: var(--rb-border);
+}
+
+html[data-theme="dark"] .legal-page__section a,
+html[data-theme="dark"] .legal-page__eyebrow,
+html[data-theme="dark"] .user-auth-card a,
+html[data-theme="dark"] .agent-login-card a {
+  color: #72dfc3;
+}
+
+/* Agent dashboard pages */
+html[data-theme="dark"] .agent-workspace {
+  --agent-blue: #58c9b3;
+  --agent-blue-dark: #38ab96;
+  --agent-ink: var(--rb-text);
+  --agent-muted: var(--rb-text-muted);
+  --agent-line: var(--rb-border);
+  --agent-canvas: var(--rb-page);
+}
+
+html[data-theme="dark"] .agent-sidebar,
+html[data-theme="dark"] .agent-topbar,
+html[data-theme="dark"] .agent-stat-card,
+html[data-theme="dark"] .agent-panel,
+html[data-theme="dark"] .agent-quick-actions,
+html[data-theme="dark"] .agent-inbox-item,
+html[data-theme="dark"] .agent-form-grid input,
+html[data-theme="dark"] .agent-form-grid select,
+html[data-theme="dark"] .agent-form-grid textarea,
+html[data-theme="dark"] .agent-contact-field input,
+html[data-theme="dark"] .agent-reply-form textarea,
+html[data-theme="dark"] .agent-row-actions button {
+  background: var(--rb-surface);
+  color: var(--rb-text);
+  border-color: var(--rb-border);
+}
+
+html[data-theme="dark"] .agent-workspace h1,
+html[data-theme="dark"] .agent-workspace h2,
+html[data-theme="dark"] .agent-workspace h3,
+html[data-theme="dark"] .agent-workspace h4,
+html[data-theme="dark"] .agent-form-grid label,
+html[data-theme="dark"] .agent-setting-row strong,
+html[data-theme="dark"] .agent-message-bubble p,
+html[data-theme="dark"] .agent-thread-empty h3,
+html[data-theme="dark"] .agent-listings-table td:first-child strong {
+  color: var(--rb-text);
+}
+
+html[data-theme="dark"] .agent-workspace p,
+html[data-theme="dark"] .agent-workspace small,
+html[data-theme="dark"] .agent-listings-table td,
+html[data-theme="dark"] .agent-dashboard-search input,
+html[data-theme="dark"] .agent-status-filter select,
+html[data-theme="dark"] .agent-row-actions button {
+  color: var(--rb-text-secondary);
+}
+
+html[data-theme="dark"] .agent-inbox-item:hover,
+html[data-theme="dark"] .agent-inbox-item.is-selected,
+html[data-theme="dark"] .agent-message-bubble,
+html[data-theme="dark"] .agent-message-bubble.is-agent-reply,
+html[data-theme="dark"] .agent-review-note,
+html[data-theme="dark"] .agent-form-section-heading > span,
+html[data-theme="dark"] .agent-empty-state > span {
+  background: var(--rb-hover-surface);
+  color: var(--rb-text);
+  border-color: var(--rb-border);
+}
+
+/* Agent status-post management screen */
+html[data-theme="dark"] .rb-agent-workspace {
+  background: var(--rb-page);
+  color: var(--rb-text);
+}
+
+html[data-theme="dark"] .rb-agent-panel,
+html[data-theme="dark"] .rb-create-form,
+html[data-theme="dark"] .rb-my-post,
+html[data-theme="dark"] .rb-agent-workspace input,
+html[data-theme="dark"] .rb-agent-workspace select,
+html[data-theme="dark"] .rb-agent-workspace textarea {
+  background: var(--rb-surface);
+  color: var(--rb-text);
+  border-color: var(--rb-border);
+}

@@ -325,6 +325,23 @@
 .status-dialog-backdrop button:focus-visible,.status-viewer-backdrop button:focus-visible,
 .status-viewer-backdrop a:focus-visible,.status-post-form :focus-visible { outline-color: var(--rb-focus); }
 
+/* Keep the home feed surfaces and loading state legible in dark mode. */
+html[data-theme="dark"] .status-home .status-topbar { background: var(--rb-topbar); }
+html[data-theme="dark"] .status-home .status-icon-button { color: var(--rb-text-secondary); }
+html[data-theme="dark"] .status-home .status-icon-button:hover { border-color: var(--rb-border); background: var(--rb-accent-soft); }
+html[data-theme="dark"] .status-home .status-filter-chips button { border-color: var(--rb-border); background: var(--rb-surface); color: var(--rb-text-secondary); }
+html[data-theme="dark"] .status-home .status-filter-chips button.is-active { border-color: var(--rb-accent); background: var(--rb-accent); color: var(--rb-on-accent); }
+html[data-theme="dark"] .status-home .status-row { background: var(--rb-surface); }
+html[data-theme="dark"] .status-home .status-row-name { color: var(--rb-text); }
+html[data-theme="dark"] .status-home .status-follow-button.is-following { border-color: var(--rb-border); background: var(--rb-surface); color: var(--rb-text-secondary); }
+html[data-theme="dark"] .status-home .status-empty { border-color: var(--rb-border); color: var(--rb-text-muted); }
+html[data-theme="dark"] .status-home .status-empty-card { background: var(--rb-surface); }
+html[data-theme="dark"] .status-home .status-muted-toggle small { background: var(--rb-accent-soft); color: var(--rb-text-secondary); }
+html[data-theme="dark"] .status-home .status-skeleton-row { border-color: var(--rb-border); background: var(--rb-surface); }
+html[data-theme="dark"] .status-home .status-skeleton-row > span,
+html[data-theme="dark"] .status-home .status-skeleton-row i,
+html[data-theme="dark"] .status-home .status-skeleton-row > b { background: var(--rb-divider); }
+
 /* The viewer always uses its fixed dark palette, regardless of the selected theme. */
 .status-viewer-backdrop {
   --rb-viewer-bg: #111b20;

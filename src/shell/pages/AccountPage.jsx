@@ -82,6 +82,7 @@ export default function AccountPage() {
   const [passwordMessage, setPasswordMessage] = useState("");
   const [followBusy, setFollowBusy] = useState("");
 
+
   const loadFollowedAgents = useCallback(async () => {
     if (!user) return;
     const directory = await getDirectoryAgents();
@@ -156,7 +157,7 @@ export default function AccountPage() {
     setSavedIds(toggleSavedProperty(propertyId, user.id));
   };
 
-  if (!agent && !user) return <main className="shell-page shell-account-page" data-theme={resolvedTheme}><span className="shell-account-icon"><UserRound size={25} /></span><h1>Your account</h1><p>Sign in to manage your RentBridge account.</p><div className="shell-account-actions"><button type="button" className="shell-primary-button" onClick={() => navigate("/user/login")}>Log in <ArrowRight size={17} /></button><button type="button" className="shell-secondary-button" onClick={() => navigate("/user/signup")}>Sign up</button></div><p className="shell-agent-login">Are you an agent? <Link to="/agent/login">Log in</Link></p><AppearanceControl /></main>;
+  if (!agent && !user) return <main className="shell-page shell-account-page" data-theme={resolvedTheme}><span className="shell-account-icon"><UserRound size={25} /></span><h1>Your account</h1><p>Sign in to manage your RentBridge account.</p><div className="shell-account-actions"><button type="button" className="shell-primary-button" onClick={() => navigate("/user/login")}>Log in <ArrowRight size={17} /></button><button type="button" className="shell-secondary-button" onClick={() => navigate("/user/signup")}>Sign up</button></div><p className="shell-agent-login">Are you an agent? <Link to="/agent/login">Log in</Link></p></main>;
 
   if (agent) return <main className="shell-page shell-account-page" data-theme={resolvedTheme}><span className="shell-account-icon"><UserRound size={25} /></span><p className="shell-eyebrow">AGENT ACCOUNT</p><h1>{agent.name}</h1><button type="button" className="shell-primary-button" onClick={() => navigate("/agent/dashboard")}>Go to dashboard <ArrowRight size={17} /></button><AppearanceControl /><button type="button" className="shell-logout-button" onClick={logout}><LogOut size={17} /> Log out</button></main>;
 
@@ -201,7 +202,7 @@ export default function AccountPage() {
     </section>
 
     <AppearanceControl />
-    <UserNotificationSettings user={user} />
+    <UserNotificationSettings key={user.id} user={user} />
     <section className="shell-account-card shell-account-security" aria-labelledby="shell-security-title"><h2 id="shell-security-title">Security and session</h2><p>You are signed in as {user.email}. Sign out to end your current session.</p><button type="button" className="shell-logout-button" onClick={logout}><LogOut size={17} /> Sign out</button></section>
   </main>;
 }

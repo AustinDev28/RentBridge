@@ -24,18 +24,25 @@ function snapshot() {
   return `${mode}:${systemTheme}`;
 }
 
+function applyResolvedTheme() {
+  if (typeof document === "undefined") return;
+  document.documentElement.dataset.theme = mode === "system" ? systemTheme : mode;
+}
+
 function emitChange() {
   listeners.forEach((listener) => listener());
 }
 
 function handleSystemChange(event) {
   systemTheme = event.matches ? "dark" : "light";
+  applyResolvedTheme();
   if (mode === "system") emitChange();
 }
 
 function handleStorageChange(event) {
   if (event.key !== STORAGE_KEY && event.key !== null) return;
   mode = readMode();
+  applyResolvedTheme();
   emitChange();
 }
 
@@ -57,6 +64,7 @@ function subscribe(listener) {
 export function setThemeMode(nextMode) {
   if (!USE_THEME_SYSTEM || !["light", "dark", "system"].includes(nextMode)) return;
   mode = nextMode;
+  applyResolvedTheme();
   try {
     window.localStorage.setItem(STORAGE_KEY, nextMode);
   } catch {
@@ -64,6 +72,8 @@ export function setThemeMode(nextMode) {
   }
   emitChange();
 }
+
+applyResolvedTheme();
 
 export function useTheme() {
   const state = useSyncExternalStore(subscribe, snapshot, () => "system:light");

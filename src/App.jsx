@@ -19,18 +19,20 @@ import { USE_NEW_SHELL } from "./shell/config.js";
 import AppShell from "./shell/AppShell.jsx";
 import AgentsPage from "./shell/pages/AgentsPage.jsx";
 import AccountPage from "./shell/pages/AccountPage.jsx";
+import MapPage from "./shell/pages/MapPage.jsx";
 
 function App() {
   const { pathname } = useLocation();
   const isHomeFeed = pathname === "/";
   const isAgentRoute = pathname === "/agent" || pathname.startsWith("/agent/");
   const showShell = USE_NEW_SHELL && !isAgentRoute;
-  const showNavbar = (USE_NEW_SHELL && isAgentRoute) || (!USE_NEW_SHELL && !isHomeFeed);
+  const showNavbar = !isHomeFeed;
 
   const routes = <Routes>
     <Route path="/" element={<Home />} />
     <Route path="/agents" element={<AgentsPage />} />
     <Route path="/account" element={<AccountPage />} />
+    {USE_NEW_SHELL && <Route path="/map" element={<MapPage />} />}
     <Route path="/safetytips" element={<SafetyTips />} />
     <Route path="/properties" element={<Properties />} />
     <Route path="/about" element={<About />} />
@@ -47,9 +49,8 @@ function App() {
   </Routes>;
 
   return <>
-    {showNavbar && <Navbar />}
-    {showShell ? <AppShell>{routes}</AppShell> : routes}
-    {!isHomeFeed && <Footer />}
+    {showNavbar && <div className={showShell ? "shell-legacy-navbar-wrap" : undefined}><Navbar /></div>}
+    {showShell ? <AppShell legacyNavbar={showNavbar}>{routes}{!isHomeFeed && <Footer />}</AppShell> : <>{routes}{!isHomeFeed && <Footer />}</>}
   </>;
 }
 

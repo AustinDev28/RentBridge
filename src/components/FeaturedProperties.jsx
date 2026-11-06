@@ -1,11 +1,16 @@
-import { useState, useEffect, useRef, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
+import { Suspense, lazy, useState, useEffect, useRef, useCallback } from "react";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { requireSignup } from "../user/requireSignup.js";
 import { getSavedPropertyIds, toggleSavedProperty } from "../user/savedProperties.js";
+import { USE_PROPERTY_MAPS } from "../shell/map/config.js";
 import "./FeaturedProperties.css";
+
+const PropertyMap = lazy(() => import("../shell/map/PropertyMap.jsx"));
 
 /* Property listing imagery. */
 
+// MOCK ONLY - replace with real backend before production
+// Approximate points use fixed per-property offsets so the mock never reveals an exact address.
 // --- Modern 2 Bedroom Apartment (Lekki Phase 1) ---
 import lekki1 from "../assets/properties/lekki-1.jpg";
 import lekki2 from "../assets/properties/lekki-2.jpg";
@@ -56,6 +61,10 @@ export const PROPERTIES = [
     agent: SAMPLE_AGENT,
     title: "Modern 2 Bedroom Apartment",
     location: "Lekki Phase 1, Lagos",
+    areaName: "Lekki",
+    approxLat: 6.4485,
+    approxLng: 3.4710,
+    showExactLocation: false,
     price: 2500000,
     beds: 2,
     baths: 2,
@@ -74,6 +83,10 @@ export const PROPERTIES = [
     agent: SAMPLE_AGENT,
     title: "Luxury 3 Bedroom Duplex",
     location: "Ikoyi, Lagos",
+    areaName: "Victoria Island",
+    approxLat: 6.4401,
+    approxLng: 3.4279,
+    showExactLocation: false,
     price: 185000000,
     beds: 3,
     baths: 3,
@@ -92,6 +105,10 @@ export const PROPERTIES = [
     agent: SAMPLE_AGENT,
     title: "Spacious 1 Bedroom Apartment",
     location: "Victoria Island, Lagos",
+    areaName: "Victoria Island",
+    approxLat: 6.4294,
+    approxLng: 3.4197,
+    showExactLocation: false,
     price: 1800000,
     beds: 1,
     baths: 1,
@@ -110,6 +127,10 @@ export const PROPERTIES = [
     agent: SAMPLE_AGENT,
     title: "4 Bedroom Terrace Duplex",
     location: "Chevron, Lekki, Lagos",
+    areaName: "Lekki",
+    approxLat: 6.4461,
+    approxLng: 3.4863,
+    showExactLocation: false,
     price: 120000000,
     beds: 4,
     baths: 4,
@@ -128,6 +149,10 @@ export const PROPERTIES = [
     agent: SAMPLE_AGENT,
     title: "Cozy Studio Apartment",
     location: "Yaba, Lagos",
+    areaName: "Yaba",
+    approxLat: 6.5106,
+    approxLng: 3.3698,
+    showExactLocation: false,
     price: 1200000,
     beds: 1,
     baths: 1,
@@ -146,6 +171,10 @@ export const PROPERTIES = [
     agent: SAMPLE_AGENT,
     title: "5 Bedroom Detached Duplex",
     location: "Banana Island, Lagos",
+    areaName: "Victoria Island",
+    approxLat: 6.4470,
+    approxLng: 3.4215,
+    showExactLocation: false,
     price: 650000000,
     beds: 5,
     baths: 6,
@@ -453,6 +482,8 @@ function ListingModal({ property, liked, onToggleLike, onClose }) {
             {amenities.map((a) => <li key={a}>{a}</li>)}
           </ul>
 
+          {USE_PROPERTY_MAPS && <Suspense fallback={<div className="rb-property-map-skeleton" role="status" aria-label="Loading property location" />}><PropertyMap property={property} /></Suspense>}
+
           <div className="modal__actions">
             <button
               className="btn btn--primary"
@@ -511,6 +542,8 @@ const EMPTY_SEARCH = { location: "", propertyType: "", minPrice: "", maxPrice: "
  */
 export default function FeaturedProperties({ properties = PROPERTIES, searchFilters, likedIds, onToggleLike, savedOnly = false, feedMode = false }) {
   const navigate = useNavigate();
+  const location = useLocation();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [selected, setSelected] = useState(null);
   const [selectedAgent, setSelectedAgent] = useState(null);
   const [localLiked, setLocalLiked] = useState(() => new Set(getSavedPropertyIds()));
@@ -530,7 +563,23 @@ export default function FeaturedProperties({ properties = PROPERTIES, searchFilt
     if (requireSignup(navigate, event)) setSelected(property);
   }, [navigate]);
 
-  const close = useCallback(() => setSelected(null), []);
+  const close = useCallback(() => {
+    setSelected(null);
+    if (location.pathname === "/properties" && searchParams.has("property")) {
+      const next = new URLSearchParams(searchParams);
+      next.delete("property");
+      setSearchParams(next, { replace: true });
+    }
+  }, [location.pathname, searchParams, setSearchParams]);
+
+  useEffect(() => {
+    if (!USE_PROPERTY_MAPS || feedMode || location.pathname !== "/properties") return;
+    const propertyId = searchParams.get("property");
+    if (!propertyId) return;
+    const requested = properties.find((property) => String(property.id) === propertyId)
+      || PROPERTIES.find((property) => String(property.id) === propertyId);
+    if (requested) setSelected(requested);
+  }, [feedMode, location.pathname, searchParams, properties]);
 
   const s = { ...EMPTY_SEARCH, ...searchFilters };
   const hasActiveSearch = s.location || s.propertyType || s.minPrice || s.maxPrice;

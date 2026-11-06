@@ -1,5 +1,5 @@
-/* Theme tokens are scoped to the new shell and status roots only. Existing pages intentionally remain outside this scope. */
-:where(.shell-root[data-theme="light"], .shell-page[data-theme="light"], .status-home[data-theme="light"], .status-agent-page[data-theme="light"]) {
+/* The selected appearance applies to the whole application, including legacy pages and the footer. */
+html[data-theme="light"] {
   color-scheme: light;
   --rb-page: #f4f7f6;
   --rb-surface: #ffffff;
@@ -45,7 +45,7 @@
   --rb-shadow: 0 12px 30px rgba(20,41,50,.15);
 }
 
-:where(.shell-root[data-theme="dark"], .shell-page[data-theme="dark"], .status-home[data-theme="dark"], .status-agent-page[data-theme="dark"]) {
+html[data-theme="dark"] {
   color-scheme: dark;
   --rb-page: #101a20;
   --rb-surface: #17242a;
@@ -71,8 +71,8 @@
   --rb-text: #edf4f1;
   --rb-text-secondary: #c0cfcc;
   --rb-text-muted: #aabbb8;
-  --rb-accent: #087d70;
-  --rb-accent-hover: #0a9483;
+  --rb-accent: #148c7e;
+  --rb-accent-hover: #1aa18f;
   --rb-on-accent: #ffffff;
   --rb-rent-bg: #163a34;
   --rb-rent-text: #bcebd7;
@@ -91,13 +91,13 @@
   --rb-shadow: 0 14px 34px rgba(0,0,0,.35);
 }
 
-:where(.shell-root, .shell-page, .status-home, .status-agent-page) {
+html[data-theme] {
   transition: background-color .18s ease, color .18s ease;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  :where(.shell-root, .shell-page, .status-home, .status-agent-page),
-  :where(.shell-root, .shell-page, .status-home, .status-agent-page) * {
+  html[data-theme],
+  html[data-theme] * {
     transition-duration: 0s !important;
   }
 }

@@ -1,1 +1,1 @@
-export const USE_NEW_SHELL = false;
+export const USE_NEW_SHELL = true;
