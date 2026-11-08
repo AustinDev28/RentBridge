@@ -10,6 +10,10 @@ import {
   saveAgentWorkspaceSection,
 } from "./authService.js";
 import "./AgentDashboard.css";
+import { USE_AGENT_VERIFICATION } from "./verification/config.js";
+import { useVerification } from "./verification/useVerification.js";
+import VerificationBanner from "./verification/VerificationBanner.jsx";
+import "./verification/verification.css";
 
 const SECTIONS = [
   { id: "overview", label: "Dashboard", icon: LayoutDashboard },
@@ -31,6 +35,7 @@ const listingTypeLabel = (type) => type === "rent" ? "For rent" : "For sale";
 export default function AgentDashboard() {
   const navigate = useNavigate();
   const agent = getCurrentAgent();
+  const verification = useVerification(agent?.id);
   const [workspace, setWorkspace] = useState(() => getAgentWorkspace(agent?.id));
   const [section, setSection] = useState("overview");
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
@@ -158,6 +163,7 @@ export default function AgentDashboard() {
         <nav className="agent-side-nav" aria-label="Agent dashboard sections">
           <button type="button" onClick={() => navigate("/agent/status")}><CircleDot size={18} /><span>Status</span></button>
           <button type="button" onClick={() => navigate("/agent/posts")}><Megaphone size={18} /><span>Posts</span></button>
+          {USE_AGENT_VERIFICATION && <button type="button" onClick={() => { setMobileNavOpen(false); navigate("/agent/verification"); }}><ShieldCheck size={18} /><span>Verification</span><span className={`av-side-dot ${verification.status?.suspended ? "is-suspended" : verification.level >= 3 ? "is-approved" : "is-pending"}`} role="img" aria-label={verification.status?.suspended ? "Account under review" : verification.level >= 3 ? "Business verified" : "Verification incomplete"} /></button>}
           {SECTIONS.map(({ id, label, icon: Icon }) => (
             <button key={id} type="button" className={section === id ? "is-active" : ""} onClick={() => openSection(id)}>
               <Icon size={18} /><span>{label}</span>
@@ -184,6 +190,7 @@ export default function AgentDashboard() {
         </header>
 
         <div className="agent-main-content">
+          {verification.status?.suspended && <VerificationBanner level={verification.level} status={verification.status} postsRemaining={verification.postsRemaining} dailyLimit={verification.dailyLimit} />}
           <div className="agent-page-heading">
             <div><p className="agent-dashboard-eyebrow">AGENT WORKSPACE</p><h1>{section === "overview" ? `Good to see you, ${profile.name || "Agent"}` : current.label}</h1><p>{section === "overview" ? "Here’s what’s happening with your properties today." : sectionIntro(section)}</p></div>
             <button type="button" className="agent-primary-button" onClick={() => openSection("add")}><FilePlus2 size={17} /> Add property</button>

@@ -3,6 +3,7 @@ import { ImagePlus, Send } from "lucide-react";
 import { getAgentWorkspace, getCurrentAgent } from "../../agent/authService.js";
 import { getAgentProfile, createPost } from "../statusService.js";
 import { StatusPreview } from "./StatusViewer.jsx";
+import { useVerification } from "../../agent/verification/useVerification.js";
 
 const IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp"];
 const VIDEO_TYPES = ["video/mp4", "video/webm"];
@@ -26,6 +27,7 @@ function readVideoDuration(file) {
 
 export default function StatusPostForm() {
   const agent = getCurrentAgent();
+  const verification = useVerification(agent?.id);
   const workspace = useMemo(() => getAgentWorkspace(agent?.id), [agent?.id]);
   const profile = getAgentProfile(agent?.id);
   const [listingId, setListingId] = useState("");
@@ -85,7 +87,9 @@ export default function StatusPostForm() {
     setBusy(true);
     try {
       const result = await createPost({ agentId: agent.id, listingId: listing.id, file: mediaFile, mediaType, durationSeconds, caption: caption.trim().slice(0, 150) });
-      if (result.error === "limit") { setError("You've reached 5 statuses in 24 hours. Try again when an older one expires."); return; }
+      if (result.error === "verification_required") { setError("Verify your identity to start posting."); return; }
+      if (result.error === "suspended") { setError("Your account is under review and cannot publish right now."); return; }
+      if (result.error === "limit") { setError(`You've reached your limit of ${verification.dailyLimit} statuses in 24 hours. Try again later.`); return; }
       if (result.error === "listing_unavailable") { setError("Choose a listing that is currently available."); return; }
       if (result.error === "media_storage_unavailable") { setError("Could not save this media. Check browser storage and try again."); return; }
       if (result.error) { setError("Choose a photo or video file and try again."); return; }
@@ -119,7 +123,7 @@ export default function StatusPostForm() {
       <label>Photo or video<input type="file" accept="image/jpeg,image/png,image/webp,video/mp4,video/webm" required onChange={chooseMedia} /><small>JPG, PNG, or WebP up to 5 MB · MP4 or WebM up to 20 MB and 30 seconds</small></label>
       <label>Caption <span className="status-caption-optional">Optional</span><textarea value={caption} maxLength={150} onChange={(event) => setCaption(event.target.value)} placeholder="Add a short caption"/><small>{caption.length}/150</small></label>
       {error && <p className="status-form-error" role="alert">{error}</p>}
-      <button className="status-primary-action" type="submit" disabled={busy}><Send size={16} />{busy ? "Posting…" : "Post status"}</button>
+      <button className="status-primary-action" type="submit" disabled={busy || !verification.canPublish}><Send size={16} />{busy ? "Posting…" : !verification.canPublish ? "Verification required" : "Post status"}</button>
     </form>
     {draft && <div className="status-preview-block"><h3>Live preview</h3><StatusPreview status={draft} agent={profile} /></div>}
   </section>;

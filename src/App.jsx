@@ -1,4 +1,4 @@
-import { Route, Routes, useLocation } from "react-router-dom";
+import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import Navbar from "./components/Navbar.jsx";
 import Footer from "./components/Footer.jsx";
 import Home from "./pages/public/Home.jsx";
@@ -20,6 +20,10 @@ import AppShell from "./shell/AppShell.jsx";
 import AgentsPage from "./shell/pages/AgentsPage.jsx";
 import AccountPage from "./shell/pages/AccountPage.jsx";
 import MapPage from "./shell/pages/MapPage.jsx";
+import AgentVerificationSignupPage from "./agent/verification/AgentSignupPage.jsx";
+import VerificationPage from "./agent/verification/VerificationPage.jsx";
+import AdminVerificationPage from "./agent/verification/AdminVerificationPage.jsx";
+import { USE_AGENT_VERIFICATION } from "./agent/verification/config.js";
 
 function App() {
   const { pathname } = useLocation();
@@ -39,7 +43,9 @@ function App() {
     <Route path="/privacy" element={<PrivacyPolicy />} />
     <Route path="/terms" element={<Terms />} />
     <Route path="/agent/login" element={<AgentLogin />} />
-    <Route path="/agent/signup" element={<AgentSignup />} />
+    <Route path="/agent/signup" element={USE_AGENT_VERIFICATION ? <AgentVerificationSignupPage /> : <AgentSignup />} />
+    <Route path="/agent/verification" element={USE_AGENT_VERIFICATION ? <AgentRouteGuard><VerificationPage /></AgentRouteGuard> : <AgentRouteGuard><Navigate to="/agent/dashboard" replace /></AgentRouteGuard>} />
+    {USE_AGENT_VERIFICATION && import.meta.env.DEV && <Route path="/admin/verification" element={<AdminVerificationPage />} />}
     <Route path="/user/login" element={<UserAuth />} />
     <Route path="/user/signup" element={<UserAuth signup />} />
     <Route path="/user/profile" element={<UserProfile />} />

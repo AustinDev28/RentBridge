@@ -6,6 +6,8 @@ import { getUserSettings } from "../user/userSettings.js";
 import { MOCK_STATUS_AGENTS, MOCK_STATUS_AREAS, MOCK_STATUS_POSTS } from "./mock/mockStatus.js";
 import { isStatusExpired } from "./utils/statusTime.js";
 import { deleteStatusMedia, resolveStatusMedia, saveStatusMedia } from "./mediaStore.js";
+import { getPostingAccess, getVerificationSnapshot, isAgentPublic, recordPublishedPost } from "../agent/verification/verificationService.js";
+import { USE_AGENT_VERIFICATION } from "../agent/verification/config.js";
 
 const STORE_KEY = "rentbridge-status-store";
 const delay = () => new Promise((resolve) => window.setTimeout(resolve, 140));
@@ -68,11 +70,16 @@ function listingIsUnavailable(post) {
 export function getAgentProfile(agentId) {
   const mockAgent = MOCK_STATUS_AGENTS.find((agent) => agent.id === agentId);
   const currentAgent = getCurrentAgent();
+  let profile;
   if (currentAgent?.id === agentId) {
     const workspace = getAgentWorkspace(agentId);
-    return { ...mockAgent, ...workspace.profile, id: agentId, name: workspace.profile.name || currentAgent.name, agency: workspace.profile.agency || mockAgent?.agency || "Independent agent", area: workspace.profile.area || mockAgent?.area || "Lekki" };
+    profile = { ...mockAgent, ...workspace.profile, id: agentId, name: workspace.profile.name || currentAgent.name, agency: workspace.profile.agency || mockAgent?.agency || "Independent agent", area: workspace.profile.area || mockAgent?.area || "Lekki" };
+  } else {
+    profile = mockAgent || { id: agentId, name: "RentBridge Agent", agency: "Independent agent", verified: false, location: "Lagos", phone: "+2348012345678" };
   }
-  return mockAgent || { id: agentId, name: "RentBridge Agent", agency: "Independent agent", verified: false, location: "Lagos", phone: "+2348012345678" };
+  if (!USE_AGENT_VERIFICATION) return profile;
+  const verification = getVerificationSnapshot(agentId);
+  return { ...profile, verified: verification.level >= 3, suspended: verification.suspended };
 }
 
 function postArea(post) {
@@ -110,13 +117,13 @@ export async function getUpdates(filter = "all") {
   const store = readStore();
   const posts = refreshExpiry(allPosts(store), store);
   const viewerId = getViewerId();
-  const following = store.followsByUser[viewerId] || [];
+  const following = getCurrentAgent() || getCurrentUser() ? store.followsByUser[viewerId] || [] : [];
   const muted = store.mutedByUser[viewerId] || [];
   const options = typeof filter === "object" && filter !== null
     ? { area: filter.area || "", type: filter.type || "all" }
     : { area: "", type: filter };
   return Promise.all(posts
-    .filter((post) => post.status === "active" && !listingIsUnavailable(post) && !muted.includes(post.agentId))
+    .filter((post) => post.status === "active" && !listingIsUnavailable(post) && !muted.includes(post.agentId) && isAgentPublic(post.agentId))
     .filter((post) => options.type === "all" || (options.type === "following" ? following.includes(post.agentId) : post.type === options.type))
     .filter((post) => !options.area || options.area === "all" || postArea(post) === options.area)
     .map(async (post) => {
@@ -131,11 +138,11 @@ export async function getRecentlyActiveAgents({ area = "", type = "all" } = {}) 
   const store = readStore();
   const posts = allPosts(store);
   const viewerId = getViewerId();
-  const following = store.followsByUser[viewerId] || [];
+  const following = getCurrentAgent() || getCurrentUser() ? store.followsByUser[viewerId] || [] : [];
   const muted = store.mutedByUser[viewerId] || [];
   const cutoff = Date.now() - 7 * 86400000;
   const latestByAgent = new Map();
-  posts.filter((post) => post.status !== "removed" && new Date(post.createdAt).getTime() >= cutoff && !listingIsUnavailable(post) && !muted.includes(post.agentId))
+  posts.filter((post) => post.status !== "removed" && new Date(post.createdAt).getTime() >= cutoff && !listingIsUnavailable(post) && !muted.includes(post.agentId) && isAgentPublic(post.agentId))
     .filter((post) => (!area || area === "all" || postArea(post) === area)
       && (type === "all" || (type === "following" ? following.includes(post.agentId) : post.type === type)))
     .forEach((post) => {
@@ -147,6 +154,7 @@ export async function getRecentlyActiveAgents({ area = "", type = "all" } = {}) 
 }
 
 export function getFollowedAgentIds() {
+  if (!getCurrentAgent() && !getCurrentUser()) return [];
   return readStore().followsByUser[getViewerId()] || [];
 }
 
@@ -159,7 +167,7 @@ export async function getMutedUpdates() {
   const store = readStore();
   const posts = refreshExpiry(allPosts(store), store);
   const muted = store.mutedByUser[getViewerId()] || [];
-  const mutedPosts = posts.filter((post) => post.status === "active" && muted.includes(post.agentId) && !listingIsUnavailable(post))
+  const mutedPosts = posts.filter((post) => post.status === "active" && muted.includes(post.agentId) && !listingIsUnavailable(post) && isAgentPublic(post.agentId))
     .map(async (post) => resolveStatusMedia({ ...post, agent: getAgentProfile(post.agentId), seenByCount: Math.max(post.viewCount || 0, (store.seenByPost[post.id] || []).length) }));
   return Promise.all(mutedPosts).then((resolved) => resolved.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)));
 }
@@ -171,7 +179,7 @@ export async function getDemoUpdates() {
   const posts = refreshExpiry(allPosts(store), store);
   const viewerId = getViewerId();
   return Promise.all(posts
-    .filter((post) => (post.isDemo || post.id.startsWith("mock-")) && post.status === "expired" && !listingIsUnavailable(post))
+    .filter((post) => (post.isDemo || post.id.startsWith("mock-")) && post.status === "expired" && !listingIsUnavailable(post) && isAgentPublic(post.agentId))
     .map(async (post) => {
       const seenByIds = store.seenByPost[post.id] || [];
       return resolveStatusMedia({ ...normalizePostArea(post), isDemo: true, seen: seenByIds.includes(viewerId), seenByCount: Math.max(post.viewCount || 0, seenByIds.length), agent: getAgentProfile(post.agentId) });
@@ -214,6 +222,7 @@ export async function recordStatusAction(postId, action) {
 }
 
 export async function followAgent(agentId) {
+  if (!getCurrentAgent() && !getCurrentUser()) return { following: false, requiresSignIn: true, offerBrowserNotifications: false };
   await delay();
   const store = readStore();
   const viewerId = getViewerId();
@@ -276,13 +285,16 @@ function addNotificationsForFollowers(post, store) {
 }
 
 export async function createPost(data) {
+  // In production, verification, suspension, and posting limits must be enforced on the server.
+  const access = await getPostingAccess(data.agentId);
+  if (!access.allowed) return { error: access.reason };
   await delay();
   const store = readStore();
   const posts = allPosts(store);
   const listing = getAgentWorkspace(data.agentId).listings.find((item) => item.id === data.listingId);
   if (!listing || !/^(active|available)$/i.test(listing.status || "")) return { error: "listing_unavailable" };
   const recent = posts.filter((post) => post.agentId === data.agentId && Date.now() - new Date(post.createdAt).getTime() < 86400000);
-  if (recent.length >= 5) return { error: "limit" };
+  if (recent.length >= access.dailyLimit) return { error: "limit" };
   if (!(data.file instanceof Blob)) return { error: "invalid_media" };
   let mediaId;
   try {
@@ -316,6 +328,7 @@ export async function createPost(data) {
   addNotificationsForFollowers(post, store);
   store.posts = [post, ...posts];
   writeStore(store);
+  await recordPublishedPost(data.agentId, post.id);
   return { post: await resolveStatusMedia(post) };
 }
 
@@ -334,7 +347,11 @@ export async function getNotifications() {
   const viewerId = getViewerId();
   const store = readStore();
   const posts = allPosts(store);
-  const notifications = store.notifications.filter((item) => item.recipientId === viewerId).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+  const notifications = store.notifications.filter((item) => {
+    if (item.recipientId !== viewerId) return false;
+    const post = posts.find((entry) => entry.id === item.statusId);
+    return !post || isAgentPublic(post.agentId);
+  }).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
   return Promise.all(notifications.map(async (item) => {
     const post = posts.find((entry) => entry.id === item.statusId);
     if (!post) return item;
@@ -366,6 +383,7 @@ export async function simulateNewPostFromFollowedAgent(agentId) {
     if (!followedAgentId) return { error: "no_agent" };
     store.followsByUser[viewerId] = [...(store.followsByUser[viewerId] || []), followedAgentId];
   }
+  if (!isAgentPublic(followedAgentId)) return { error: "agent_unverified" };
   const template = MOCK_STATUS_POSTS.find((post) => post.agentId === followedAgentId);
   if (!template) return { error: "no_post" };
   const post = { ...template, id: `simulated-${Date.now()}`, createdAt: new Date().toISOString(), expiresAt: new Date(Date.now() + 86400000).toISOString(), viewCount: 0, status: "active" };

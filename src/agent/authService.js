@@ -1,6 +1,9 @@
 // MOCK ONLY - replace with real backend before production
 import { MOCK_USERS } from "./mockUsers.js";
 import { DEMO_WORKSPACE } from "./mockWorkspace.js";
+import {
+  MOCK_DEVICE_SIGNUP_COUNT_KEY, MOCK_DEVICE_SIGNUP_LIMIT, MOCK_DISPOSABLE_EMAIL_DOMAINS,
+} from "./verification/mock/mockVerification.js";
 
 const SESSION_KEY = "rentbridge-agent-session";
 const REGISTERED_AGENTS_KEY = "rentbridge-registered-agents";
@@ -28,7 +31,7 @@ export async function login(email, password) {
     return { error: "access_denied" };
   }
 
-  const agent = { id: user.id, name: user.name, email: user.email, role: user.role };
+  const agent = { id: user.id, name: user.name, email: user.email, role: user.role, agency: user.agency || "", phoneDigest: user.phoneDigest || "" };
   window.localStorage.setItem(SESSION_KEY, JSON.stringify(agent));
   return { agent };
 }
@@ -82,6 +85,54 @@ export async function registerAgent({ name, email, password }) {
   const session = { id: agent.id, name: agent.name, email: agent.email, role: agent.role };
   window.localStorage.setItem(SESSION_KEY, JSON.stringify(session));
   return { agent: session };
+}
+
+export async function fingerprintAgentValue(value, purpose = "verification") {
+  const source = String(value || "").trim().toLowerCase();
+  const normalized = purpose === "phone" ? source.replace(/\D/g, "") : source.replace(/[^a-z0-9]/g, "");
+  const input = new TextEncoder().encode(`rentbridge-mock:${purpose}:${normalized}`);
+  if (globalThis.crypto?.subtle) {
+    const digest = await globalThis.crypto.subtle.digest("SHA-256", input);
+    return [...new Uint8Array(digest)].map((part) => part.toString(16).padStart(2, "0")).join("");
+  }
+  let hash = 2166136261;
+  for (const part of input) hash = Math.imul(hash ^ part, 16777619);
+  return `mock-${(hash >>> 0).toString(16)}`;
+}
+
+export async function registerVerifiedAgent({ name, email, phone, password, agencyName = "", acceptedTerms = false }) {
+  await delay(300);
+  const normalizedEmail = String(email || "").trim().toLowerCase();
+  const normalizedPhone = String(phone || "").replace(/\D/g, "");
+  const domain = normalizedEmail.split("@").at(-1);
+  if (!name?.trim() || !normalizedEmail.includes("@") || !normalizedPhone || !password || !acceptedTerms) return { error: "signup_failed" };
+  if (MOCK_DISPOSABLE_EMAIL_DOMAINS.includes(domain)) return { error: "signup_failed" };
+
+  try {
+    const registeredAgents = getRegisteredAgents();
+    if ([...MOCK_USERS, ...registeredAgents].some((user) => user.email.toLowerCase() === normalizedEmail)) return { error: "signup_failed" };
+    const phoneDigest = await fingerprintAgentValue(normalizedPhone, "phone");
+    if (registeredAgents.some((agent) => agent.phoneDigest && agent.phoneDigest === phoneDigest)) return { error: "signup_failed" };
+    const signupCount = Number(window.localStorage.getItem(MOCK_DEVICE_SIGNUP_COUNT_KEY) || 0);
+    if (!Number.isFinite(signupCount) || signupCount >= MOCK_DEVICE_SIGNUP_LIMIT) return { error: "signup_failed" };
+
+    const agent = {
+      id: `agent-${Date.now()}`,
+      name: name.trim(),
+      email: normalizedEmail,
+      password,
+      role: "agent",
+      agency: String(agencyName || "").trim(),
+      phoneDigest,
+    };
+    window.localStorage.setItem(REGISTERED_AGENTS_KEY, JSON.stringify([...registeredAgents, agent]));
+    window.localStorage.setItem(MOCK_DEVICE_SIGNUP_COUNT_KEY, String(signupCount + 1));
+    const session = { id: agent.id, name: agent.name, email: agent.email, role: "agent", agency: agent.agency, phoneDigest };
+    window.localStorage.setItem(SESSION_KEY, JSON.stringify(session));
+    return { agent: session };
+  } catch {
+    return { error: "signup_failed" };
+  }
 }
 
 function getRegisteredAgents() {
