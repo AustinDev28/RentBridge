@@ -1,39 +1,15 @@
 import { useCallback, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { ArrowRight, Bell, BellOff, LogOut, Monitor, Moon, Sun, UserRound } from "lucide-react";
+import { ArrowRight, Bell, BellOff, LogOut, UserRound } from "lucide-react";
 import { getCurrentAgent, logout as logoutAgent } from "../../agent/authService.js";
 import { getCurrentUser, logoutUser, updateUserProfile, changeUserPassword } from "../../user/userAuthService.js";
 import { useUserPreferences } from "../../user/UserPreferences.jsx";
 import { getDirectoryAgents, toggleAgentFollow } from "../agentDirectoryService.js";
-import { USE_THEME_SYSTEM } from "../../theme/config.js";
 import { useTheme } from "../../theme/useTheme.js";
 import { getUserSettings, saveUserSettings } from "../../user/userSettings.js";
 import { getSavedPropertyIds, toggleSavedProperty } from "../../user/savedProperties.js";
 import { PROPERTIES } from "../../components/FeaturedProperties.jsx";
 import PasswordField from "../../user/PasswordField.jsx";
-
-const THEME_OPTIONS = [
-  { value: "light", label: "Light", Icon: Sun },
-  { value: "dark", label: "Dark", Icon: Moon },
-  { value: "system", label: "System", Icon: Monitor },
-];
-
-function AppearanceControl() {
-  const { mode, setMode } = useTheme();
-  return <section className="shell-appearance" aria-labelledby="shell-appearance-title">
-    <h2 id="shell-appearance-title">Appearance</h2>
-    <p>Choose Light, Dark, or match your device setting.</p>
-    <fieldset disabled={!USE_THEME_SYSTEM}>
-      <legend className="shell-sr-only">Color theme</legend>
-      <div className="shell-theme-options" role="radiogroup" aria-label="Color theme">
-        {THEME_OPTIONS.map(({ value, label, Icon }) => <label className={mode === value ? "is-selected" : ""} key={value}>
-          <input type="radio" name="rentbridge-theme-mode" value={value} checked={mode === value} onChange={() => setMode(value)} aria-label={`${label} theme`} />
-          <Icon size={18} aria-hidden="true" /><span>{label}</span>
-        </label>)}
-      </div>
-    </fieldset>
-  </section>;
-}
 
 function UserNotificationSettings({ user }) {
   const [settings, setSettings] = useState(() => getUserSettings(user.id));
@@ -159,7 +135,7 @@ export default function AccountPage() {
 
   if (!agent && !user) return <main className="shell-page shell-account-page" data-theme={resolvedTheme}><span className="shell-account-icon"><UserRound size={25} /></span><h1>Your account</h1><p>Sign in to manage your RentBridge account.</p><div className="shell-account-actions"><button type="button" className="shell-primary-button" onClick={() => navigate("/user/login")}>Log in <ArrowRight size={17} /></button><button type="button" className="shell-secondary-button" onClick={() => navigate("/user/signup")}>Sign up</button></div><p className="shell-agent-login">Are you an agent? <Link to="/agent/login">Log in</Link></p></main>;
 
-  if (agent) return <main className="shell-page shell-account-page" data-theme={resolvedTheme}><span className="shell-account-icon"><UserRound size={25} /></span><p className="shell-eyebrow">AGENT ACCOUNT</p><h1>{agent.name}</h1><button type="button" className="shell-primary-button" onClick={() => navigate("/agent/dashboard")}>Go to dashboard <ArrowRight size={17} /></button><AppearanceControl /><button type="button" className="shell-logout-button" onClick={logout}><LogOut size={17} /> Log out</button></main>;
+  if (agent) return <main className="shell-page shell-account-page" data-theme={resolvedTheme}><span className="shell-account-icon"><UserRound size={25} /></span><p className="shell-eyebrow">AGENT ACCOUNT</p><h1>{agent.name}</h1><button type="button" className="shell-primary-button" onClick={() => navigate("/agent/dashboard")}>Go to dashboard <ArrowRight size={17} /></button><button type="button" className="shell-logout-button" onClick={logout}><LogOut size={17} /> Log out</button></main>;
 
   const savedProperties = PROPERTIES.filter((property) => savedIds.includes(property.id));
   const initials = user.name.split(/\s+/).slice(0, 2).map((part) => part[0]).join("").toUpperCase();
@@ -201,7 +177,6 @@ export default function AccountPage() {
       {followedAgents.length ? <ul className="shell-followed-list">{followedAgents.map((item) => <li key={item.id}><span className="shell-followed-avatar" aria-hidden="true">{item.name.split(/\s+/).slice(0, 2).map((part) => part[0]).join("").toUpperCase()}</span><span><strong>{item.name}</strong><small>{item.activePostCount} active {item.activePostCount === 1 ? "update" : "updates"}</small></span><button type="button" disabled={followBusy === item.id} onClick={() => unfollow(item.id)}>{followBusy === item.id ? "Updating…" : "Unfollow"}</button></li>)}</ul> : <p className="shell-account-empty">You are not following any agents yet. <Link to="/agents">Explore agents</Link></p>}
     </section>
 
-    <AppearanceControl />
     <UserNotificationSettings key={user.id} user={user} />
     <section className="shell-account-card shell-account-security" aria-labelledby="shell-security-title"><h2 id="shell-security-title">Security and session</h2><p>You are signed in as {user.email}. Sign out to end your current session.</p><button type="button" className="shell-logout-button" onClick={logout}><LogOut size={17} /> Sign out</button></section>
   </main>;

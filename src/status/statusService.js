@@ -93,7 +93,11 @@ function postArea(post) {
 
 function normalizePostArea(post) {
   const mockSize = MOCK_STATUS_POSTS.find((item) => item.id === post.id)?.sqft;
-  return { ...post, area: postArea(post), sqft: Number(post.sqft ?? (typeof post.area === "number" ? post.area : mockSize || 0)) };
+  const area = postArea(post);
+  const savedLocation = typeof post.location === "string" ? post.location.trim() : "";
+  const savedArea = typeof post.area === "string" ? post.area.trim() : "";
+  const location = savedLocation || savedArea || getAgentProfile(post.agentId).location || area || "Lagos, Nigeria";
+  return { ...post, location, area, sqft: Number(post.sqft ?? (typeof post.area === "number" ? post.area : mockSize || 0)) };
 }
 
 export async function getAreas() {

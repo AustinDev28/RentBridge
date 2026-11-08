@@ -1,1 +1,1 @@
-export const USE_THEME_SYSTEM = true;
+export const USE_THEME_SYSTEM = false;

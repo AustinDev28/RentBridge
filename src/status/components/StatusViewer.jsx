@@ -14,16 +14,17 @@ function getSequence(groups) {
 function StatusContent({ status, agent }) {
   const navigate = useNavigate();
   const phone = (status.agentPhone || agent.phone || "+2348012345678").replace(/\D/g, "");
-  const message = encodeURIComponent(`Hi ${agent.name}, I'm interested in the ${status.type === "rent" ? "rental" : "sale"} property in ${status.location}.`);
+  const location = status.location || status.area || agent.location || "Lagos, Nigeria";
+  const message = encodeURIComponent(`Hi ${agent.name}, I'm interested in the ${status.type === "rent" ? "rental" : "sale"} property in ${location}.`);
   return <>
     {status.mediaType === "video"
-      ? <video className="status-viewer-photo" src={status.mediaUrl || status.imageUrl} aria-label={`${status.propertyType} video in ${status.location}`} autoPlay muted playsInline />
-      : <img className="status-viewer-photo" src={status.mediaUrl || status.imageUrl} alt={`${status.propertyType} in ${status.location}`} draggable="false" />}
+      ? <video className="status-viewer-photo" src={status.mediaUrl || status.imageUrl} aria-label={`${status.propertyType} video in ${location}`} autoPlay muted playsInline />
+      : <img className="status-viewer-photo" src={status.mediaUrl || status.imageUrl} alt={`${status.propertyType} in ${location}`} draggable="false" />}
     <div className="status-viewer-gradient" />
     <div className="status-viewer-details">
       <span className={`status-viewer-type status-viewer-type-${status.type}`}>{status.type === "rent" ? "For rent" : "For sale"}</span>
       <strong className="status-viewer-price">₦{Number(status.price).toLocaleString("en-NG")}{status.type === "rent" && <small> / year</small>}</strong>
-      <span className="status-viewer-location">{status.location}</span>
+      <span className="status-viewer-location">{location}</span>
       <div className="status-viewer-features"><span>{status.beds || 0} beds</span><span>{status.propertyType || "Property"}</span><span>{Number(status.sqft ?? (typeof status.area === "number" ? status.area : 0)).toLocaleString("en-NG")} sqft</span></div>
       {status.caption && <p className="status-viewer-caption">{status.caption}</p>}
       <div className="status-viewer-ctas">

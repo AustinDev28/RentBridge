@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import ExpiryBadge from "./ExpiryBadge.jsx";
 import { getAgent, getFeedState, likePost, reportPost, savePost, followAgent, incrementView, incrementCtaTap } from "../feedService.js";
 import { requireSignup } from "../../user/requireSignup.js";
+import { requireSignIn } from "../../user/requireSignIn.js";
 
 export default function PostCard({ post, countView = true }) {
   const navigate = useNavigate();
@@ -15,7 +16,7 @@ export default function PostCard({ post, countView = true }) {
   const liked = state.likes.includes(post.id), saved = state.saves.includes(post.id);
   const toggleLike = async () => { await likePost(post.id); setState(getFeedState()); };
   const toggleSave = async () => { await savePost(post.id); setState(getFeedState()); };
-  const toggleFollow = async () => { await followAgent(post.agentId); setState(getFeedState()); };
+  const toggleFollow = async (event) => { if (!requireSignIn(navigate, event)) return; await followAgent(post.agentId); setState(getFeedState()); };
   const share = async () => {
     const url = `${window.location.origin}/?post=${encodeURIComponent(post.id)}#post-${encodeURIComponent(post.id)}`;
     try { await navigator.clipboard.writeText(url); window.alert("Post link copied."); }

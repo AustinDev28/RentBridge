@@ -40,7 +40,7 @@ function StatusAvatar({ agent, posts }) {
   </span>;
 }
 
-export default function StatusRow({ group, onOpen, following, onFollow, onUnfollow, onMute, onProfile, showAreaDetails = false }) {
+export default function StatusRow({ group, onOpen, following, onFollow, onUnfollow, onMute, onProfile }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const latest = group.posts.reduce((best, post) => new Date(post.createdAt) > new Date(best.createdAt) ? post : best, group.posts[0]);
   return (
@@ -49,7 +49,7 @@ export default function StatusRow({ group, onOpen, following, onFollow, onUnfoll
         <StatusAvatar agent={group.agent} posts={group.posts} />
         <span className="status-row-copy">
           <span className="status-row-name">{group.agent.name}{group.agent.verified && <CircleCheck size={15} aria-label="Verified agent" />}</span>
-          <span className="status-row-time">{showAreaDetails ? <span className="status-row-area-type"><span>{latest.area || group.agent.area || group.agent.location}</span><span aria-hidden="true">·</span><span>{latest.type === "rent" ? "Rent" : "Buy"}</span><span aria-hidden="true">·</span><UpdateTime value={latest.createdAt} relative /></span> : <UpdateTime value={latest.createdAt} />}{group.unseenCount > 0 && <span className="status-unseen-count">{group.unseenCount} new</span>}</span>
+          <span className="status-row-time"><span className="status-row-area-type"><span>{latest.location || latest.area || group.agent.area || group.agent.location || "Lagos, Nigeria"}</span><span aria-hidden="true">·</span><span>{latest.type === "rent" ? "Rent" : "Buy"}</span><span aria-hidden="true">·</span><UpdateTime value={latest.createdAt} relative /></span>{group.unseenCount > 0 && <span className="status-unseen-count">{group.unseenCount} new</span>}</span>
         </span>
       </button>
       <div className="status-row-actions">

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Bell, CircleCheck, MapPin, Search, UserRound, X } from "lucide-react";
 import logo from "../../assets/logo.jpg";
 import { getCurrentAgent } from "../../agent/authService.js";
@@ -14,6 +14,7 @@ import StatusViewer from "./StatusViewer.jsx";
 import { isStatusExpired } from "../utils/statusTime.js";
 import { nearestAreaName } from "../utils/nearestArea.js";
 import { readFeedPreferences, writeFeedPreferences } from "../utils/areaPreferences.js";
+import { requireSignIn } from "../../user/requireSignIn.js";
 import {
   followAgent, getAreas, getDemoUpdates, getFollowedAgentIds, getMutedUpdates, getMyStatuses,
   getRecentlyActiveAgents, getUpdates, muteAgent, requestBrowserNotifications, unfollowAgent, unmuteAgent,
@@ -90,6 +91,7 @@ function AgentProfileDialog({ agent, following, onFollow, onUnfollow, onClose })
 }
 
 export default function StatusHome() {
+  const navigate = useNavigate();
   const { user, theme: legacyTheme } = useUserPreferences();
   const { resolvedTheme } = useTheme();
   const theme = USE_THEME_SYSTEM ? resolvedTheme : legacyTheme;
@@ -182,6 +184,7 @@ export default function StatusHome() {
   const openViewer = (group, postId = group.firstUnseenPostId, demo = false) => { setSearchOpen(false); setProfile(null); setViewer({ agentId: group.agent.id, postId, demo }); };
   const openNotificationStatus = (agentId, statusId) => setViewer({ agentId, postId: statusId, demo: false });
   const handleFollow = async (agentId) => {
+    if (!requireSignIn(navigate)) return;
     const result = await followAgent(agentId);
     await refresh();
     if (result.offerBrowserNotifications) setNotificationPrompt(true);
@@ -216,7 +219,6 @@ export default function StatusHome() {
     onUnfollow: () => handleUnfollow(group.agent.id),
     onMute: () => handleMute(group.agent.id),
     onProfile: setProfile,
-    showAreaDetails: USE_AREA_CHIPS,
   });
 
   return <div className={`status-home ${USE_AREA_CHIPS ? "area-chips-enabled" : ""}`} data-theme={theme}>

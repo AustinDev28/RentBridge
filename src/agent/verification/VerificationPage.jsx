@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { Check, Circle, ShieldCheck, Upload } from "lucide-react";
 import { getCurrentAgent } from "../authService.js";
-import { saveDraft, submitBusiness, submitIdentity, VERIFICATION_DOCUMENT_MAX_BYTES, VERIFICATION_DOCUMENT_TYPES, VERIFICATION_ID_TYPES } from "./verificationService.js";
+import { saveDraft, submitBusiness, submitIdentity, submitPhoneNumber, VERIFICATION_DOCUMENT_MAX_BYTES, VERIFICATION_DOCUMENT_TYPES, VERIFICATION_ID_TYPES } from "./verificationService.js";
 import { useVerification } from "./useVerification.js";
 import VerificationBanner from "./VerificationBanner.jsx";
 import "./verification.css";
@@ -50,6 +50,7 @@ export default function VerificationPage() {
   const [notice, setNotice] = useState("");
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
+  const [phoneNumber, setPhoneNumber] = useState("");
   const [identity, setIdentity] = useState({ idType: VERIFICATION_ID_TYPES[0], idNumber: "", frontFile: null, backFile: null, selfieFile: null });
   const [business, setBusiness] = useState({ agencyName: agent?.agency || "", registrationNumber: "", officeAddress: "", membershipNumber: "", website: "", documentFile: null });
   const contact = status?.contact || {};
@@ -76,6 +77,7 @@ export default function VerificationPage() {
       if (result?.error) {
         const messages = {
           duplicate_id: "This ID number has already been submitted for another account.",
+          invalid_phone: "Enter a valid phone number, including its country code.",
           contact_required: "Verify your email and phone before submitting identity documents.",
           identity_required: "Identity verification must be approved before business verification.",
           storage_unavailable: "Progress could not be saved in this browser. Please try again.",
@@ -102,6 +104,10 @@ export default function VerificationPage() {
       return result;
     }, "Identity documents submitted. Review usually takes up to 24 hours.");
   };
+  const submitPhoneForm = (event) => {
+    event.preventDefault();
+    run(() => submitPhoneNumber({ agentId: agent.id, phone: phoneNumber }), "Phone number submitted for verification.");
+  };
   const submitBusinessForm = (event) => {
     event.preventDefault();
     run(() => submitBusiness({ agentId: agent.id, ...business }), "Business documents submitted. Review usually takes up to 24 hours.");
@@ -124,7 +130,7 @@ export default function VerificationPage() {
       {contact.status === "rejected" && <p className="av-rejection">{contact.reason || "Contact verification was rejected."}</p>}
       <div className="av-contact-actions">
         <div><strong>Email confirmation</strong><p>{contact.emailVerified ? "Email confirmed." : "Email and phone confirmation are required before identity verification."}</p></div>
-        <div><strong>Phone confirmation</strong><p>{contact.phoneVerified ? "Phone number confirmed." : "Phone confirmation is required before identity verification."}</p></div>
+        <div><strong>Phone confirmation</strong><p>{contact.phoneVerified ? "Phone number confirmed." : "Enter your phone number for confirmation."}</p><form className="av-phone-form" onSubmit={submitPhoneForm}><label htmlFor="av-contact-phone">Phone number</label><input id="av-contact-phone" name="phone" type="tel" inputMode="tel" autoComplete="tel" placeholder="+234 801 234 5678" value={phoneNumber} onChange={(event) => setPhoneNumber(event.target.value)} disabled={contact.phoneVerified} required /><button className="av-secondary" type="submit" disabled={busy || contact.phoneVerified}>{contact.phoneVerified ? "Phone confirmed" : contact.status === "pending_review" ? "Update phone number" : "Submit phone number"}</button></form></div>
       </div>
       <div className="av-card-footer"><button className="av-secondary" type="button" onClick={() => run(() => refresh(), "Your progress is saved. You can continue later.")}>Save and continue later</button>{contact.emailVerified && contact.phoneVerified && <StepStatus value="approved" />}</div>
     </section>

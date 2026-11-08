@@ -51,6 +51,10 @@
 .av-contact-actions > div { min-width: 0; padding: 13px; border: 1px solid var(--rb-border, #e2e8f0); border-radius: 10px; }
 .av-contact-actions strong { font-size: .84rem; }
 .av-contact-actions p { margin: 5px 0 10px; color: var(--rb-text-secondary, #586779); font-size: .75rem; line-height: 1.45; }
+.av-contact-actions label { display: block; margin: 10px 0 5px; color: var(--rb-text, #172033); font-size: .75rem; font-weight: 700; }
+.av-contact-actions input { width: 100%; min-width: 0; min-height: 44px; padding: 10px 11px; border: 1px solid var(--rb-border, #cbd5e1); border-radius: 8px; background: var(--rb-input-surface, #fff); color: var(--rb-text, #172033); font: inherit; font-size: .84rem; }
+.av-contact-actions input:focus-visible { outline: 3px solid var(--rb-focus, #1d4ed8); outline-offset: 2px; }
+.av-phone-form { display: grid; gap: 8px; }
 .av-inline-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
 .av-inline-actions > small { color: var(--rb-text-secondary, #586779); font-size: .72rem; }
 .av-otp-form { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: end; gap: 7px; margin-top: 10px; }

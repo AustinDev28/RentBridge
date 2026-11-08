@@ -121,6 +121,22 @@ export async function recordPublishedPost(agentId, postId) {
   return writeStore(store);
 }
 
+export async function submitPhoneNumber({ agentId = getCurrentAgent()?.id, phone = "" }) {
+  await delay();
+  if (!activeAgent(agentId)) return { error: "not_signed_in" };
+  const normalizedPhone = String(phone).replace(/\D/g, "");
+  if (normalizedPhone.length < 8 || normalizedPhone.length > 15) return { error: "invalid_phone" };
+  const phoneDigest = await fingerprintAgentValue(normalizedPhone, "phone");
+  const store = readStore();
+  const record = recordFor(store, agentId);
+  record.contact = {
+    ...record.contact,
+    phoneDigest,
+    status: "pending_review",
+  };
+  return writeStore(store) ? { success: true } : { error: "storage_unavailable" };
+}
+
 export async function submitIdentity({ agentId = getCurrentAgent()?.id, idType, idNumber, frontFile, backFile, selfieFile }) {
   await delay();
   if (!activeAgent(agentId)) return { error: "not_signed_in" };
