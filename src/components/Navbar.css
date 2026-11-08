@@ -3,7 +3,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 8px 20px;
+    padding: 6px 18px;
     position: relative;
     background: #f2efef;
     border-radius: 8px;
@@ -11,14 +11,14 @@
     border-bottom: 1px solid #e5e7eb;
 }
 .logo img {
-    width: 90px;
+    width: 68px;
     height: auto;
     object-fit: contain;
     display: block;
 }
 
 .navbar-links {
-    gap:20px;
+    gap:16px;
     display:flex;
     align-items: center;
 }
@@ -29,7 +29,7 @@
     gap: 3px;
     text-decoration: none;
     color: black;
-    font-size: 17px;
+    font-size: 15px;
     font-weight: 750;
 }
 .navbar-links svg {
@@ -127,7 +127,10 @@
 
 @media (max-width: 768px) {
     .navbar {
-        padding:15px 20px;
+        padding:5px 14px;
+    }
+    .logo img {
+        width:52px;
     }
     .navbar-links {
         display:none;

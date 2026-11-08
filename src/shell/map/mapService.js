@@ -106,7 +106,7 @@ export async function createMapView(container, { theme = "light", center = MAP_C
     minZoom: MAP_CONFIG.minZoom,
     maxZoom: MAP_CONFIG.maxZoom,
     attributionControl: false,
-    cooperativeGestures: true,
+    cooperativeGestures: false,
     renderWorldCopies: false,
   });
   const state = {

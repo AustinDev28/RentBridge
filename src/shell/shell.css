@@ -219,13 +219,13 @@
 .shell-map-nearby-dialog > button:not(.shell-map-dialog-close) { display: flex; width: 100%; min-height: 44px; margin-top: 8px; }
 .shell-map-nearby-dialog button:focus-visible,.shell-map-page button:focus-visible,.shell-map-page a:focus-visible,.shell-map-mobile-list summary:focus-visible { outline: 3px solid var(--rb-focus); outline-offset: 2px; }
 .shell-legacy-navbar-wrap { position: sticky; z-index: 60; top: 0; }
-.shell-with-legacy-navbar { --shell-legacy-navbar-height: 120px; min-height: calc(100vh - var(--shell-legacy-navbar-height)); }
+.shell-with-legacy-navbar { --shell-legacy-navbar-height: 64px; min-height: calc(100vh - var(--shell-legacy-navbar-height)); }
 .shell-with-legacy-navbar .shell-frame { min-height: calc(100vh - var(--shell-legacy-navbar-height)); }
 .shell-with-legacy-navbar .shell-sidebar { top: var(--shell-legacy-navbar-height); bottom: 0; }
 .shell-with-legacy-navbar .shell-topbar { top: var(--shell-legacy-navbar-height); }
 .shell-with-legacy-navbar .shell-mobile-brand { display: none; }
-.shell-with-legacy-navbar .shell-content { min-height: calc(100vh - var(--shell-legacy-navbar-height) - 58px); }
-.shell-with-legacy-navbar .shell-map-page { height: calc(100vh - var(--shell-legacy-navbar-height) - 58px); height: calc(100dvh - var(--shell-legacy-navbar-height) - 58px); }
+.shell-with-legacy-navbar .shell-content { min-height: calc(100vh - var(--shell-legacy-navbar-height)); }
+.shell-with-legacy-navbar .shell-map-page { height: calc(100vh - var(--shell-legacy-navbar-height)); height: calc(100dvh - var(--shell-legacy-navbar-height)); }
 @media (min-width: 768px) {
   .shell-content:has(.shell-map-page) { padding: 0; }
   .shell-map-page { height: calc(100vh - 62px); height: calc(100dvh - 62px); min-height: 500px; }
@@ -237,10 +237,10 @@
   .shell-map-selection { right: 270px; bottom: 18px; left: 18px; width: min(400px,calc(100% - 36px)); }
 }
 @media (min-width: 769px) {
-  .shell-with-legacy-navbar { --shell-legacy-navbar-height: 106px; }
+  .shell-with-legacy-navbar { --shell-legacy-navbar-height: 80px; }
   .shell-with-legacy-navbar .shell-sidebar { top: var(--shell-legacy-navbar-height); bottom: 0; }
-  .shell-with-legacy-navbar .shell-content { min-height: calc(100vh - var(--shell-legacy-navbar-height) - 62px); }
-  .shell-with-legacy-navbar .shell-map-page { height: calc(100vh - var(--shell-legacy-navbar-height) - 62px); height: calc(100dvh - var(--shell-legacy-navbar-height) - 62px); }
+  .shell-with-legacy-navbar .shell-content { min-height: calc(100vh - var(--shell-legacy-navbar-height)); }
+  .shell-with-legacy-navbar .shell-map-page { height: calc(100vh - var(--shell-legacy-navbar-height)); height: calc(100dvh - var(--shell-legacy-navbar-height)); }
 }
 @media (max-width: 767px) {
   .shell-map-layout { display: block; }
