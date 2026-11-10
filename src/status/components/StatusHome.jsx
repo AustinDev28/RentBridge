@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Bell, CircleCheck, MapPin, Search, UserRound, X } from "lucide-react";
+import { Bell, CircleCheck, MapPin, Menu, Search, UserRound, X } from "lucide-react";
 import logo from "../../assets/logo.jpg";
 import { getCurrentAgent } from "../../agent/authService.js";
 import { useUserPreferences } from "../../user/UserPreferences.jsx";
@@ -92,6 +92,7 @@ function AgentProfileDialog({ agent, following, onFollow, onUnfollow, onClose })
 
 export default function StatusHome() {
   const navigate = useNavigate();
+  const [siteMenuOpen, setSiteMenuOpen] = useState(false);
   const { user, theme: legacyTheme } = useUserPreferences();
   const { resolvedTheme } = useTheme();
   const theme = USE_THEME_SYSTEM ? resolvedTheme : legacyTheme;
@@ -222,7 +223,7 @@ export default function StatusHome() {
   });
 
   return <div className={`status-home ${USE_AREA_CHIPS ? "area-chips-enabled" : ""}`} data-theme={theme}>
-    <header className="status-topbar"><Link className="status-brand" to="/" aria-label="RentBridge home"><img src={logo} alt="" /><span>RentBridge</span></Link><div className="status-top-actions"><button className="status-icon-button" type="button" aria-label="Search agents or areas" onClick={() => setSearchOpen(true)}><Search size={19} /></button><StatusNotifications onOpenStatus={openNotificationStatus} /><Link className="status-icon-button status-profile-link" to={user ? "/account" : "/user/login"} aria-label={user ? "Open account settings" : "Sign in"}><UserRound size={19} /></Link></div></header>
+    <header className="status-topbar"><div className="status-brand-group"><button className="status-menu-button" type="button" aria-label="Toggle menu" aria-expanded={siteMenuOpen} aria-controls="status-site-menu" onClick={() => setSiteMenuOpen((open) => !open)}><Menu size={21} /></button><Link className="status-brand" to="/" aria-label="RentBridge home"><img src={logo} alt="" /><span>RentBridge</span></Link></div><div className="status-top-actions"><button className="status-icon-button" type="button" aria-label="Search agents or areas" onClick={() => setSearchOpen(true)}><Search size={19} /></button><StatusNotifications onOpenStatus={openNotificationStatus} /><Link className="status-icon-button status-profile-link" to={user ? "/account" : "/user/login"} aria-label={user ? "Open account settings" : "Sign in"}><UserRound size={19} /></Link></div>{siteMenuOpen && <nav className="status-site-menu" id="status-site-menu" aria-label="Main menu"><Link to="/" onClick={() => setSiteMenuOpen(false)}>Home</Link><Link to="/properties" onClick={() => setSiteMenuOpen(false)}>Properties</Link><Link to="/about" onClick={() => setSiteMenuOpen(false)}>About</Link><Link to="/safetytips" onClick={() => setSiteMenuOpen(false)}>Safety Tips</Link><Link to="/agent/login" onClick={() => setSiteMenuOpen(false)}>Agents Login</Link><Link to="/account" onClick={() => setSiteMenuOpen(false)}>Account</Link></nav>}</header>
 
     <main className="status-home-main">
       {agent && <section className="status-my-status" aria-label="My status"><div className="status-my-avatar">{agent.name.split(/\s+/).map((part) => part[0]).join("").slice(0, 2)}<Link to="/agent/status" className="status-my-add" aria-label="Add a status">+</Link></div><div className="status-my-copy"><strong>My status</strong><span>{activeMine.length} active {activeMine.length === 1 ? "update" : "updates"} · Seen by {seenTotal}</span></div><Link to="/agent/status" className="status-my-manage">Manage status</Link></section>}

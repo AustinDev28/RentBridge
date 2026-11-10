@@ -10,6 +10,12 @@
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 .status-topbar { position: sticky; z-index: 40; top: 0; display: flex; height: 64px; align-items: center; justify-content: space-between; padding: 0 max(16px,calc((100vw - 480px)/2)); border-bottom: 1px solid var(--status-line); background: rgba(255,255,255,.96); backdrop-filter: blur(12px); }
+.status-brand-group { display: flex; min-width: 0; align-items: center; gap: 10px; }
+.status-menu-button { display: grid; width: 40px; height: 40px; flex: 0 0 auto; place-items: center; border: 1px solid transparent; border-radius: 50%; background: transparent; color: var(--status-ink); cursor: pointer; }
+.status-menu-button:hover { border-color: var(--status-line); background: var(--rb-hover-surface); }
+.status-site-menu { position: absolute; z-index: 45; top: calc(100% + 6px); left: max(12px,calc((100vw - 480px)/2)); display: grid; width: min(230px,calc(100vw - 24px)); gap: 3px; padding: 8px; border: 1px solid var(--status-line); border-radius: 12px; background: var(--rb-surface); box-shadow: 0 12px 30px rgba(18,38,45,.16); }
+.status-site-menu a { display: flex; min-height: 42px; align-items: center; padding: 0 11px; border-radius: 8px; color: var(--rb-text); font-size: .85rem; font-weight: 600; text-decoration: none; }
+.status-site-menu a:hover { background: var(--rb-hover-surface); }
 .status-brand { display: inline-flex; align-items: center; gap: 9px; color: var(--status-ink); font-size: 1rem; font-weight: 760; letter-spacing: -.035em; text-decoration: none; }
 .status-brand img { width: 34px; height: 34px; border-radius: 10px; object-fit: cover; }
 .status-top-actions { display: flex; align-items: center; gap: 8px; }

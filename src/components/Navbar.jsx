@@ -8,6 +8,16 @@ export default function Navbar() {
     const [isOpen, setIsOpen] = useState(false);
     return (
         <section className="navbar">
+        {/* Hamburger button - mobile only */}
+      <button
+        className="hamburger"
+        onClick={() => setIsOpen(!isOpen)}
+        aria-label="Toggle menu"
+      >
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
         <div className="logo">
          <img src={logo} alt="RentBridge" />
             </div>
@@ -32,17 +42,6 @@ export default function Navbar() {
                  <CircleUserRound size={14} /> Account
                </Link>
              </div>
-         {/* Hamburger button - mobile only */}
-      <button
-        className="hamburger"
-        onClick={() => setIsOpen(!isOpen)}
-        aria-label="Toggle menu"
-      >
-        <span></span>
-        <span></span>
-        <span></span>
-      </button>
-
       {/* Mobile menu */}
       {isOpen && (
         <ul className="mobile-menu">

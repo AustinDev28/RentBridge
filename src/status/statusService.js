@@ -111,9 +111,7 @@ export async function getAreas() {
     if (!counts.has(name)) counts.set(name, new Set());
     counts.get(name).add(post.agentId);
   });
-  return MOCK_STATUS_AREAS.map((area, index) => ({ ...area, count: counts.get(area.name)?.size || 0, index }))
-    .filter((area) => area.count > 0)
-    .sort((first, second) => second.count - first.count || first.index - second.index);
+  return MOCK_STATUS_AREAS.map((area) => ({ ...area, count: counts.get(area.name)?.size || 0 }));
 }
 
 export async function getUpdates(filter = "all") {
