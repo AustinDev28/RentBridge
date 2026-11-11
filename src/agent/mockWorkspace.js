@@ -40,7 +40,7 @@ export const DEMO_WORKSPACE = {
     {
       id: "demo-message-1",
       name: "Ada Okafor",
-      email: "ada@example.com",
+      email: "adaokafor23@gmail.com",
       listing: "Modern 2 Bedroom Apartment",
       text: "Is this apartment still available for viewing this week?",
       date: "2026-10-23T10:30:00.000Z",
@@ -50,7 +50,7 @@ export const DEMO_WORKSPACE = {
     {
       id: "demo-message-2",
       name: "Tunde Bello",
-      email: "tunde@example.com",
+      email: "tunde23@gmail.com",
       listing: "Family Terrace Duplex",
       text: "Please can you share more details about the title documents?",
       date: "2026-10-22T14:15:00.000Z",

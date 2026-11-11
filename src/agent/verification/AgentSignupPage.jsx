@@ -2,6 +2,8 @@ import { useState } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import { ShieldCheck } from "lucide-react";
 import { getCurrentAgent, registerVerifiedAgent } from "../authService.js";
+import { USE_SOCIAL_SIGNIN } from "../../auth/social/config.js";
+import GoogleSignInButton, { SocialSignInDivider } from "../../auth/social/GoogleSignInButton.jsx";
 import { getStatus } from "./verificationService.js";
 import "./verification.css";
 
@@ -44,6 +46,7 @@ export default function AgentSignupPage() {
       <p className="av-eyebrow">RENTBRIDGE FOR AGENTS</p>
       <h1 id="av-signup-title">Create your agent account</h1>
       <p className="av-muted">Your agent account and verification details are saved in this browser.</p>
+      {USE_SOCIAL_SIGNIN && <><GoogleSignInButton role="agent" onSuccess={async (newAgent) => { await getStatus(newAgent.id); navigate("/agent/verification", { replace: true }); }} /><SocialSignInDivider /></>}
       <form className="av-form" onSubmit={submit}>
         <label htmlFor="av-name">Full name</label>
         <input id="av-name" name="name" autoComplete="name" value={form.name} onChange={update} required />

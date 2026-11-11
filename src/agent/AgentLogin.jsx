@@ -2,6 +2,9 @@ import { useState } from "react";
 import { Eye, EyeOff, ShieldCheck } from "lucide-react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import { getCurrentAgent, login, resetAgentPassword } from "./authService.js";
+import { USE_AGENT_VERIFICATION } from "./verification/config.js";
+import { USE_SOCIAL_SIGNIN } from "../auth/social/config.js";
+import GoogleSignInButton, { SocialSignInDivider } from "../auth/social/GoogleSignInButton.jsx";
 import "./AgentLogin.css";
 
 function AgentPasswordField({ id, label, value, onChange, autoComplete, placeholder }) {
@@ -84,6 +87,7 @@ export default function AgentLogin() {
       <p className="agent-login-eyebrow">RENTBRIDGE FOR AGENTS</p>
       <h1 id="agent-login-title">{recovering ? "Reset your password" : "Welcome back"}</h1>
       <p className="agent-login-subtitle">{recovering ? "Enter your account email and choose a new password." : "Sign in to your account."}</p>
+      {!recovering && USE_SOCIAL_SIGNIN && <><GoogleSignInButton role="agent" onSuccess={() => navigate(USE_AGENT_VERIFICATION ? "/agent/verification" : "/agent/dashboard", { replace: true })} /><SocialSignInDivider /></>}
       {recovering ? <form onSubmit={handleRecovery}>
         <label htmlFor="agent-recovery-email">Email address</label>
         <input id="agent-recovery-email" type="email" autoComplete="email" value={recoveryEmail} onChange={(event) => setRecoveryEmail(event.target.value)} placeholder="you@example.com" required />

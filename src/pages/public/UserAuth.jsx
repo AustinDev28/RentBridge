@@ -4,6 +4,8 @@ import { ArrowLeft, UserRound } from "lucide-react";
 import { loginUser, registerUser, resetUserPassword } from "../../user/userAuthService.js";
 import PasswordField from "../../user/PasswordField.jsx";
 import { useUserPreferences } from "../../user/UserPreferences.jsx";
+import { USE_SOCIAL_SIGNIN } from "../../auth/social/config.js";
+import GoogleSignInButton, { SocialSignInDivider } from "../../auth/social/GoogleSignInButton.jsx";
 import "./UserAuth.css";
 
 export default function UserAuth({ signup = false }) {
@@ -35,6 +37,11 @@ export default function UserAuth({ signup = false }) {
     const result = loginUser(email, password);
     if (result.error) return setError("We couldn't find a user account with those details.");
     setUser(result.user);
+    navigate("/account", { replace: true });
+  };
+
+  const handleGoogleSuccess = (googleUser) => {
+    setUser(googleUser);
     navigate("/account", { replace: true });
   };
 
@@ -79,6 +86,7 @@ export default function UserAuth({ signup = false }) {
         <h1 id="user-auth-title">{recovering ? recoveryComplete ? "Password updated" : "Reset your password" : signup ? "Create your account" : "Welcome back"}</h1>
         <p className="user-auth-subtitle">{recovering ? recoveryComplete ? "You can now sign in with your new password." : "Enter your account email and choose a new password." : signup ? "Save homes and connect with trusted agents." : "Sign in to save homes and manage your profile."}</p>
 
+        {!recovering && USE_SOCIAL_SIGNIN && <><GoogleSignInButton role="user" onSuccess={handleGoogleSuccess} /><SocialSignInDivider /></>}
         {recovering ? recoveryComplete ? <div className="user-auth-recovery-success" role="status"><p>Your password has been changed.</p><button type="button" className="user-auth-submit" onClick={() => { setEmail(recoveryEmail); setPassword(""); setRecovering(false); setRecoveryComplete(false); }}>Return to sign in</button></div> : <form onSubmit={handleRecovery}>
           <label htmlFor="recovery-email">Email address</label>
           <input id="recovery-email" type="email" autoComplete="email" value={recoveryEmail} onChange={(event) => setRecoveryEmail(event.target.value)} placeholder="you@example.com" required />

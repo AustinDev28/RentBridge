@@ -1,6 +1,7 @@
 // MOCK ONLY - replace with real backend before production
 import { MOCK_USERS } from "./mockUsers.js";
 import { DEMO_WORKSPACE } from "./mockWorkspace.js";
+import { isGoogleLinked, isMockGoogleEmail, setGoogleLinked } from "../auth/social/socialService.js";
 import {
   MOCK_DEVICE_SIGNUP_COUNT_KEY, MOCK_DEVICE_SIGNUP_LIMIT, MOCK_DISPOSABLE_EMAIL_DOMAINS,
 } from "./verification/mock/mockVerification.js";
@@ -85,6 +86,73 @@ export async function registerAgent({ name, email, password }) {
   const session = { id: agent.id, name: agent.name, email: agent.email, role: agent.role };
   window.localStorage.setItem(SESSION_KEY, JSON.stringify(session));
   return { agent: session };
+}
+
+export async function signInWithGoogle({ email, name = "RentBridge Agent" }) {
+  await delay(240);
+  if (typeof navigator !== "undefined" && navigator.onLine === false) return { error: "network_error" };
+  const normalizedEmail = String(email || "").trim().toLowerCase();
+  const accounts = [...MOCK_USERS, ...getRegisteredAgents()].filter((account) => account.role === "agent");
+  const existing = accounts.find((account) => account.email.toLowerCase() === normalizedEmail);
+  if (existing) {
+    if ((existing.authProvider === "google" && !existing.googleDisconnected) || isGoogleLinked("agent", existing.id)) {
+      const session = { id: existing.id, name: existing.name, email: existing.email, role: "agent", agency: existing.agency || "", phoneDigest: existing.phoneDigest || "" };
+      window.localStorage.setItem(SESSION_KEY, JSON.stringify(session));
+      return { agent: session };
+    }
+    const passwordOverrides = readPasswordOverrides();
+    if (typeof (passwordOverrides[existing.id] || existing.password) === "string" && (passwordOverrides[existing.id] || existing.password)) {
+      return { error: "link_required", accountId: existing.id };
+    }
+  }
+  if (!isMockGoogleEmail(normalizedEmail)) return { error: "mock_account_unavailable" };
+
+  const account = { id: `agent-google-${Date.now()}`, name: String(name || "RentBridge Agent").trim(), email: normalizedEmail, password: null, role: "agent", agency: "", authProvider: "google" };
+  try {
+    const registered = getRegisteredAgents();
+    window.localStorage.setItem(REGISTERED_AGENTS_KEY, JSON.stringify([...registered, account]));
+    const session = { id: account.id, name: account.name, email: account.email, role: "agent", agency: "" };
+    window.localStorage.setItem(SESSION_KEY, JSON.stringify(session));
+    return { agent: session };
+  } catch {
+    return { error: "storage_unavailable" };
+  }
+}
+
+export async function linkGoogleAccount({ email, password }) {
+  await delay(240);
+  if (typeof navigator !== "undefined" && navigator.onLine === false) return { error: "network_error" };
+  const normalizedEmail = String(email || "").trim().toLowerCase();
+  const account = [...MOCK_USERS, ...getRegisteredAgents()].find((item) => item.role === "agent" && item.email.toLowerCase() === normalizedEmail);
+  if (!account) return { error: "link_confirmation_failed" };
+  const passwordOverrides = readPasswordOverrides();
+  const expectedPassword = passwordOverrides[account.id] || account.password;
+  if (!expectedPassword || expectedPassword !== password) return { error: "link_confirmation_failed" };
+  if (!setGoogleLinked("agent", account.id, true)) return { error: "storage_unavailable" };
+  const session = { id: account.id, name: account.name, email: account.email, role: "agent", agency: account.agency || "", phoneDigest: account.phoneDigest || "" };
+  window.localStorage.setItem(SESSION_KEY, JSON.stringify(session));
+  return { agent: session };
+}
+
+export function getSignInMethods(agentId = getCurrentAgent()?.id) {
+  const account = [...MOCK_USERS, ...getRegisteredAgents()].find((item) => item.id === agentId && item.role === "agent");
+  if (!account) return { password: false, google: false };
+  const password = Boolean(readPasswordOverrides()[account.id] || account.password);
+  return { password, google: (account.authProvider === "google" && !account.googleDisconnected) || isGoogleLinked("agent", account.id) };
+}
+
+export function disconnectGoogleAccount(agentId = getCurrentAgent()?.id) {
+  const methods = getSignInMethods(agentId);
+  if (!methods.google) return { error: "google_not_connected" };
+  if (!methods.password) return { error: "password_required" };
+  if (!setGoogleLinked("agent", agentId, false)) return { error: "storage_unavailable" };
+  try {
+    const registered = getRegisteredAgents().map((account) => account.id === agentId ? { ...account, googleDisconnected: true } : account);
+    window.localStorage.setItem(REGISTERED_AGENTS_KEY, JSON.stringify(registered));
+  } catch {
+    return { error: "storage_unavailable" };
+  }
+  return { success: true, signInMethods: getSignInMethods(agentId) };
 }
 
 export async function fingerprintAgentValue(value, purpose = "verification") {

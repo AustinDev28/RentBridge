@@ -1,0 +1,65 @@
+.googleButton {
+  display: flex;
+  width: 100%;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 9px 16px;
+  border: 1px solid #747775;
+  border-radius: 8px;
+  background: #fff;
+  color: #1f1f1f;
+  font: inherit;
+  font-size: .9rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+.googleButton:hover:not(:disabled) { background: #f8faff; box-shadow: 0 1px 2px rgba(60,64,67,.3); }
+.googleButton:focus-visible,.sheet button:focus-visible,.dialogForm input:focus-visible { outline: 3px solid var(--rb-focus, #087d70); outline-offset: 2px; }
+.googleButton:disabled { cursor: wait; opacity: .7; }
+.googleLogo { width: 20px; height: 20px; flex: 0 0 auto; }
+.divider { display: flex; align-items: center; gap: 12px; margin: 18px 0; color: var(--rb-text-muted, #52676f); font-size: .78rem; }
+.divider::before,.divider::after { height: 1px; flex: 1; background: var(--rb-divider, #e5ece9); content: ""; }
+.cancelNotice { margin: 9px 0 0; color: var(--rb-text-secondary, #435960); font-size: .8rem; text-align: center; }
+.backdrop { position: fixed; z-index: 300; inset: 0; display: grid; place-items: center; padding: 18px; background: rgba(10,24,30,.56); }
+.sheet { position: relative; width: min(100%, 440px); max-height: min(86dvh, 680px); overflow: auto; padding: 24px; border: 1px solid var(--rb-border, #d9e3df); border-radius: 18px; background: var(--rb-surface, #fff); color: var(--rb-text, #182b35); box-shadow: 0 20px 60px rgba(10,24,30,.24); }
+.sheetHeader { display: flex; min-height: 38px; align-items: center; gap: 10px; }
+.googleMark { display: grid; width: 30px; height: 30px; place-items: center; border: 1px solid var(--rb-border, #d9e3df); border-radius: 50%; color: #4285f4; font-size: 1.1rem; font-weight: 750; }
+.closeButton { display: grid; width: 44px; height: 44px; flex: 0 0 auto; place-items: center; margin-left: auto; border: 0; border-radius: 50%; background: transparent; color: var(--rb-text-secondary, #435960); font: inherit; font-size: 1.55rem; cursor: pointer; }
+.sheet h2 { margin: 14px 0 5px; color: var(--rb-text, #182b35); font-size: 1.32rem; line-height: 1.3; }
+.sheetSubtitle { margin: 0 0 18px; color: var(--rb-text-secondary, #435960); font-size: .84rem; line-height: 1.5; overflow-wrap: anywhere; }
+.accountList { display: grid; gap: 8px; }
+.accountOption { display: flex; width: 100%; min-height: 56px; align-items: center; gap: 12px; padding: 8px 10px; border: 1px solid var(--rb-border, #d9e3df); border-radius: 10px; background: var(--rb-raised, #fff); color: var(--rb-text, #182b35); text-align: left; cursor: pointer; }
+.accountOption:hover:not(:disabled) { background: var(--rb-hover-surface, #edf5f2); }
+.accountOption > span:last-child { display: grid; min-width: 0; gap: 3px; }
+.accountOption strong,.accountOption small { overflow-wrap: anywhere; }
+.accountOption strong { font-size: .84rem; }
+.accountOption small { color: var(--rb-text-secondary, #435960); font-size: .72rem; }
+.accountAvatar { display: grid; width: 38px; height: 38px; flex: 0 0 auto; place-items: center; border-radius: 50%; background: var(--rb-avatar-surface, #e7f2ee); color: var(--rb-avatar-text, #176f65); font-size: .78rem; font-weight: 750; }
+.otherAvatar { border: 1px solid var(--rb-border, #d9e3df); background: transparent; font-size: 1.25rem; }
+.dialogForm { display: grid; gap: 9px; }
+.dialogForm label { margin-top: 5px; color: var(--rb-text, #182b35); font-size: .8rem; font-weight: 700; }
+.dialogForm input { width: 100%; min-width: 0; min-height: 44px; padding: 10px 11px; border: 1px solid var(--rb-border, #d9e3df); border-radius: 8px; background: var(--rb-input-surface, #fff); color: var(--rb-text, #182b35); font: inherit; font-size: .86rem; }
+.selectedEmail { min-width: 0; padding: 9px 0; color: var(--rb-text-secondary, #435960); font-size: .82rem; overflow-wrap: anywhere; }
+.primaryAction { min-height: 44px; margin-top: 7px; padding: 9px 14px; border: 0; border-radius: 8px; background: var(--rb-accent, #087d70); color: var(--rb-on-accent, #fff); font: inherit; font-size: .84rem; font-weight: 700; cursor: pointer; }
+.primaryAction:disabled { cursor: wait; opacity: .7; }
+.loadingMessage { margin: 14px 0 0; color: var(--rb-text-secondary, #435960); font-size: .82rem; text-align: center; }
+.errorBlock { display: grid; gap: 8px; margin-top: 14px; padding: 11px; border: 1px solid var(--rb-warning, #a93631); border-radius: 9px; background: var(--rb-surface, #fff); color: var(--rb-warning, #a93631); font-size: .8rem; }
+.errorBlock p { margin: 0; line-height: 1.45; }
+.errorBlock button { justify-self: start; min-height: 44px; padding: 0 10px; border: 1px solid currentColor; border-radius: 7px; background: transparent; color: inherit; font: inherit; font-weight: 700; cursor: pointer; }
+.cancelAction { display: block; min-height: 44px; margin: 12px auto -5px; padding: 0 14px; border: 0; background: transparent; color: var(--rb-text-secondary, #435960); font: inherit; font-size: .82rem; font-weight: 650; cursor: pointer; }
+.sheet button:disabled { cursor: not-allowed; opacity: .65; }
+.accountSecurity { margin-top: 14px; }
+.accountProvider { margin: 10px 0; color: var(--rb-text-secondary, #435960); font-size: .82rem; line-height: 1.5; }
+.disconnectButton { min-height: 44px; padding: 0 13px; border: 1px solid var(--rb-border, #d9e3df); border-radius: 8px; background: var(--rb-surface, #fff); color: var(--rb-text, #182b35); font: inherit; font-size: .8rem; font-weight: 700; cursor: pointer; }
+.securityMessage { margin: 8px 0 0; color: var(--rb-text-secondary, #435960); font-size: .78rem; line-height: 1.45; }
+
+@media (max-width: 600px) {
+  .backdrop { align-items: end; padding: 0; }
+  .sheet { width: 100%; max-height: 88dvh; padding: 22px 20px calc(18px + env(safe-area-inset-bottom)); border-radius: 18px 18px 0 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .googleButton { transition: none; }
+}

@@ -132,14 +132,14 @@ export default function AgentDashboard() {
       : message);
     persist("messages", updated);
     setReply("");
-    setNotice("Your reply has been saved.");
+    setNotice("Your reply has been saved successfully.");
   };
 
   const saveProfile = (event) => {
     event.preventDefault();
     const result = saveAgentProfile(agent.id, profile);
     setWorkspace(result.workspace);
-    setNotice("Profile changes saved.");
+    setNotice("Profile changes saved succesfully.");
   };
 
   const updateSetting = (key, checked) => {

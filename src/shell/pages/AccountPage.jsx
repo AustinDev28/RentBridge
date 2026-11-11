@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { ArrowRight, Bell, BellOff, LogOut, UserRound } from "lucide-react";
-import { getCurrentAgent, logout as logoutAgent } from "../../agent/authService.js";
-import { getCurrentUser, logoutUser, updateUserProfile, changeUserPassword } from "../../user/userAuthService.js";
+import { getCurrentAgent, logout as logoutAgent, getSignInMethods as getAgentSignInMethods, disconnectGoogleAccount as disconnectAgentGoogle } from "../../agent/authService.js";
+import { getCurrentUser, logoutUser, updateUserProfile, changeUserPassword, getSignInMethods as getUserSignInMethods, disconnectGoogleAccount as disconnectUserGoogle } from "../../user/userAuthService.js";
 import { useUserPreferences } from "../../user/UserPreferences.jsx";
 import { getDirectoryAgents, toggleAgentFollow } from "../agentDirectoryService.js";
 import { useTheme } from "../../theme/useTheme.js";
@@ -10,6 +10,7 @@ import { getUserSettings, saveUserSettings } from "../../user/userSettings.js";
 import { getSavedPropertyIds, toggleSavedProperty } from "../../user/savedProperties.js";
 import { PROPERTIES } from "../../components/FeaturedProperties.jsx";
 import PasswordField from "../../user/PasswordField.jsx";
+import socialStyles from "../../auth/social/social.module.css";
 
 function UserNotificationSettings({ user }) {
   const [settings, setSettings] = useState(() => getUserSettings(user.id));
@@ -50,6 +51,11 @@ export default function AccountPage() {
   const { user, setUser } = useUserPreferences();
   const { resolvedTheme } = useTheme();
   const agent = getCurrentAgent();
+  const accountId = agent?.id || user?.id;
+  const accountRole = agent ? "agent" : "user";
+  const getMethods = useCallback(() => accountRole === "agent" ? getAgentSignInMethods(accountId) : getUserSignInMethods(accountId), [accountId, accountRole]);
+  const [signInMethods, setSignInMethods] = useState(() => accountId ? getMethods() : { password: false, google: false });
+  const [socialMessage, setSocialMessage] = useState("");
   const [followedAgents, setFollowedAgents] = useState([]);
   const [savedIds, setSavedIds] = useState(() => getSavedPropertyIds(user?.id));
   const [displayName, setDisplayName] = useState(user?.name || "");
@@ -57,6 +63,11 @@ export default function AccountPage() {
   const [passwordForm, setPasswordForm] = useState({ currentPassword: "", newPassword: "", confirmPassword: "" });
   const [passwordMessage, setPasswordMessage] = useState("");
   const [followBusy, setFollowBusy] = useState("");
+
+  useEffect(() => {
+    setSignInMethods(accountId ? getMethods() : { password: false, google: false });
+    setSocialMessage("");
+  }, [accountId, accountRole, getMethods]);
 
 
   const loadFollowedAgents = useCallback(async () => {
@@ -133,9 +144,23 @@ export default function AccountPage() {
     setSavedIds(toggleSavedProperty(propertyId, user.id));
   };
 
+  const disconnectGoogle = () => {
+    const result = accountRole === "agent" ? disconnectAgentGoogle(accountId) : disconnectUserGoogle(accountId);
+    if (result.error === "password_required") {
+      setSocialMessage("Set a password before disconnecting Google so you can still sign in to your account.");
+      return;
+    }
+    if (result.error) {
+      setSocialMessage("Google could not be disconnected. Please try again.");
+      return;
+    }
+    setSignInMethods(result.signInMethods);
+    setSocialMessage("Google has been disconnected.");
+  };
+
   if (!agent && !user) return <main className="shell-page shell-account-page" data-theme={resolvedTheme}><span className="shell-account-icon"><UserRound size={25} /></span><h1>Your account</h1><p>Sign in to manage your RentBridge account.</p><div className="shell-account-actions"><button type="button" className="shell-primary-button" onClick={() => navigate("/user/login")}>Log in <ArrowRight size={17} /></button><button type="button" className="shell-secondary-button" onClick={() => navigate("/user/signup")}>Sign up</button></div><p className="shell-agent-login">Are you an agent? <Link to="/agent/login">Log in</Link></p></main>;
 
-  if (agent) return <main className="shell-page shell-account-page" data-theme={resolvedTheme}><span className="shell-account-icon"><UserRound size={25} /></span><p className="shell-eyebrow">AGENT ACCOUNT</p><h1>{agent.name}</h1><button type="button" className="shell-primary-button" onClick={() => navigate("/agent/dashboard")}>Go to dashboard <ArrowRight size={17} /></button><button type="button" className="shell-logout-button" onClick={logout}><LogOut size={17} /> Log out</button></main>;
+  if (agent) return <main className="shell-page shell-account-page" data-theme={resolvedTheme}><span className="shell-account-icon"><UserRound size={25} /></span><p className="shell-eyebrow">AGENT ACCOUNT</p><h1>{agent.name}</h1><button type="button" className="shell-primary-button" onClick={() => navigate("/agent/dashboard")}>Go to dashboard <ArrowRight size={17} /></button>{signInMethods.google && <section className={`shell-account-card ${socialStyles.accountSecurity}`} aria-labelledby="shell-agent-security-title"><h2 id="shell-agent-security-title">Privacy and security</h2><p className={socialStyles.accountProvider}>You sign in with Google.</p><button type="button" className={socialStyles.disconnectButton} onClick={disconnectGoogle}>Disconnect Google</button>{socialMessage && <p className={socialStyles.securityMessage} role="status">{socialMessage}</p>}</section>}<button type="button" className="shell-logout-button" onClick={logout}><LogOut size={17} /> Log out</button></main>;
 
   const savedProperties = PROPERTIES.filter((property) => savedIds.includes(property.id));
   const initials = user.name.split(/\s+/).slice(0, 2).map((part) => part[0]).join("").toUpperCase();
@@ -155,7 +180,7 @@ export default function AccountPage() {
       </form>
     </section>
 
-    <section className="shell-account-card" aria-labelledby="shell-password-title">
+    {signInMethods.password && <section className="shell-account-card" aria-labelledby="shell-password-title">
       <h2 id="shell-password-title">Change password</h2>
       <p>Enter your current password and choose a new password with at least 8 characters.</p>
       <form className="shell-account-form" onSubmit={changePassword}>
@@ -165,7 +190,7 @@ export default function AccountPage() {
         <button type="submit" className="shell-secondary-button">Change password</button>
         {passwordMessage && <p className="shell-account-message" role="status">{passwordMessage}</p>}
       </form>
-    </section>
+    </section>}
 
     <section className="shell-account-card" aria-labelledby="shell-saved-title">
       <div className="shell-account-card-heading"><div><h2 id="shell-saved-title">Saved properties</h2><p>{savedProperties.length} saved {savedProperties.length === 1 ? "property" : "properties"}</p></div><Link to="/properties">Browse properties</Link></div>
@@ -178,6 +203,6 @@ export default function AccountPage() {
     </section>
 
     <UserNotificationSettings key={user.id} user={user} />
-    <section className="shell-account-card shell-account-security" aria-labelledby="shell-security-title"><h2 id="shell-security-title">Security and session</h2><p>You are signed in as {user.email}. Sign out to end your current session.</p><button type="button" className="shell-logout-button" onClick={logout}><LogOut size={17} /> Sign out</button></section>
+    <section className={`shell-account-card shell-account-security ${socialStyles.accountSecurity}`} aria-labelledby="shell-security-title"><h2 id="shell-security-title">Privacy and security</h2>{signInMethods.google && <p className={socialStyles.accountProvider}>You sign in with Google.</p>}<p>You are signed in as {user.email}. Sign out to end your current session.</p>{signInMethods.google && <button type="button" className={socialStyles.disconnectButton} onClick={disconnectGoogle}>Disconnect Google</button>}{socialMessage && <p className={socialStyles.securityMessage} role="status">{socialMessage}</p>}<button type="button" className="shell-logout-button" onClick={logout}><LogOut size={17} /> Sign out</button></section>
   </main>;
 }
